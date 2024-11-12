@@ -17,15 +17,50 @@ body {
 }
 
 /* 登入容器樣式 */
-.auth-container {
-    background: #fdfdfd;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.login-container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     max-width: 400px;
     width: 100%;
     text-align: center;
+    margin: 100px auto;
 }
+
+.login-container h1 {
+    font-size: 2em;
+    color: #4a4e50;
+    margin-bottom: 20px;
+}
+
+.login-container input {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #cdd7db;
+    background-color: #e8ebec;
+    color: #4a4e50;
+    font-size: 1em;
+}
+
+.login-container button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #8fa7b3;
+    color: #ffffff;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login-container button:hover {
+    background-color: #738f9a;
+}
+
 
 .auth-container h1 {
     font-size: 2em;
