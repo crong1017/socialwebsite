@@ -1,72 +1,118 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>登入頁面</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-        }
-        .login-container {
-            width: 300px;
-            padding: 20px;
-            background-color: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-        .login-container h2 {
-            margin-top: 0;
-            text-align: center;
-        }
-        .login-container input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .login-container button {
-            width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .login-container button:hover {
-            background-color: #45a049;
-        }
-    </style>
+    <title>泡泡糖社交</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="login-container">
-    <h2>登入</h2>
-    <form id="loginForm" onsubmit="return login()">
-        <input type="text" id="username" placeholder="使用者名稱" required>
-        <input type="password" id="password" placeholder="密碼" required>
-        <button type="submit">登入</button>
-    </form>
-    <p id="message" style="text-align:center; color:green; display:none;">登入成功！</p>
+<header class="header">
+    <h1>泡泡糖社交</h1>
+    <nav>
+        <a href="profile.html" class="profile-button">個人檔案</a>
+    </nav>
+</header>
+
+<div class="post-section">
+    <h2>創建新貼文</h2>
+    <textarea id="postContent" placeholder="你在想什麼？" rows="3"></textarea>
+    <button onclick="createPost()">發表</button>
+</div>
+
+<div class="blog-container" id="feedContainer">
+    <!-- 貼文會顯示在這裡 -->
 </div>
 
 <script>
-    function login() {
-        const username = document.getElementById("username").value;
-        const password = document.getElementById("password").value;
-        // 模擬登入邏輯
-        if (username && password) {
-            document.getElementById("message").style.display = "block";
+    document.addEventListener("DOMContentLoaded", loadPosts);
+
+    function createPost() {
+        const content = document.getElementById('postContent').value;
+        const user_id = 1; // 假設使用者 ID 已經取得並存儲在此處，實際應從登入資訊中取得
+
+        if (content) {
+            fetch('/createPost', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_id, content })
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    alert('發文成功！');
+                    loadPosts(); // 刷新貼文列表
+                    document.getElementById('postContent').value = ''; // 清空輸入框
+                } else {
+                    alert(result.message || '發文失敗，請重試');
+                }
+            })
+            .catch(error => {
+                console.error('發文錯誤:', error);
+                alert('發文失敗，請檢查伺服器連線');
+            });
+        } else {
+            alert('請寫些內容再發表！');
         }
-        return false; // 防止表單提交
+    }
+
+    function loadPosts() {
+        const feedContainer = document.getElementById('feedContainer');
+        feedContainer.innerHTML = '';
+        const posts = JSON.parse(localStorage.getItem("posts")) || [];
+
+        posts.forEach((post, index) => {
+            const postCard = document.createElement('div');
+            postCard.className = 'post-card';
+            postCard.innerHTML = `
+                <div class="post-content">
+                    <p>${post.content}</p>
+                    <span class="post-time">${post.time}</span>
+                </div>
+                <div class="interaction-buttons">
+                    <button onclick="likePost(${index})">👍 按讚 (${post.likes})</button>
+                    <button onclick="toggleCommentSection(${index})">💬 留言</button>
+                </div>
+                <div class="comments-section" id="comments-${index}" style="display: none;">
+                    <textarea id="commentInput-${index}" placeholder="寫下你的留言..." rows="2"></textarea>
+                    <button onclick="addComment(${index})">添加留言</button>
+                    <div class="comments-list">
+                        ${post.comments.map(comment => `<p>${comment}</p>`).join('')}
+                    </div>
+                </div>
+            `;
+            feedContainer.appendChild(postCard);
+        });
+    }
+
+    function likePost(index) {
+        const posts = JSON.parse(localStorage.getItem("posts"));
+        posts[index].likes += 1;
+        localStorage.setItem("posts", JSON.stringify(posts));
+        loadPosts();
+    }
+
+    function toggleCommentSection(index) {
+        const commentSection = document.getElementById(`comments-${index}`);
+        commentSection.style.display = commentSection.style.display === "none" ? "block" : "none";
+    }
+
+    function addComment(index) {
+        const commentInput = document.getElementById(`commentInput-${index}`);
+        const comment = commentInput.value;
+        if (comment) {
+            const posts = JSON.parse(localStorage.getItem("posts"));
+            posts[index].comments.push(comment);
+            localStorage.setItem("posts", JSON.stringify(posts));
+            commentInput.value = '';
+            loadPosts();
+        } else {
+            alert('請寫些內容再留言！');
+        }
     }
 </script>
 </body>
 </html>
+
