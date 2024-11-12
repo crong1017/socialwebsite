@@ -33,12 +33,12 @@
         posts.forEach(post => {
             const postCard = document.createElement('div');
             postCard.className = 'post-card';
-            postCard.innerHTML = `
+            postCard.innerHTML = 
                 <div class="post-content">
                     <p>${post.content}</p>
                     <span class="post-time">${post.time}</span>
                 </div>
-            `;
+            ;
             postList.appendChild(postCard); // 按順序添加貼文
         });
     }
