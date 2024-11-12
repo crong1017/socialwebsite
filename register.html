@@ -2,14 +2,19 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>註冊 - 泡泡糖社交</title>
-    <script src="script.js"></script>
+    <link rel="stylesheet" href="styles.css"> <!-- 引用樣式檔案 -->
+    <script src="script.js"></script> <!-- 引用 JavaScript 檔案 -->
 </head>
 <body>
-    <h1>註冊</h1>
-    <input id="username" type="text" placeholder="使用者名稱">
-    <input id="email" type="email" placeholder="Email">
-    <input id="password" type="password" placeholder="Password">
-    <button onclick="register()">註冊</button>
+    <div class="register-container">
+        <h1>註冊</h1>
+        <input id="username" type="text" placeholder="使用者名稱">
+        <input id="email" type="email" placeholder="Email">
+        <input id="password" type="password" placeholder="Password">
+        <button onclick="register()">註冊</button>
+    </div>
 </body>
 </html>
+
