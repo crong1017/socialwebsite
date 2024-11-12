@@ -4,97 +4,113 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>泡泡糖社交</title>
-    <link rel="stylesheet" href="Client/css/styles.css">
-    <script type="module" src="Client/js/main.js"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header class="header">
-        <h1>泡泡糖社交</h1>
-        <nav>
-            <a href="register.html" class="profile-button">註冊</a>
-        </nav>
-    </header>
+<header class="header">
+    <h1>泡泡糖社交</h1>
+    <nav>
+        <a href="profile.html" class="profile-button">個人檔案</a>
+    </nav>
+</header>
 
-    <!-- 登入區域 -->
-    <div id="auth-section">
-        <h2>登入</h2>
-        <input id="login-email" type="email" placeholder="Email">
-        <input id="login-password" type="password" placeholder="Password">
-        <button onclick="login()">登入</button>
-        <p>還沒有帳號？ <a href="register.html">註冊</a></p>
-    </div>
+<div class="post-section">
+    <h2>創建新貼文</h2>
+    <textarea id="postContent" placeholder="你在想什麼？" rows="3"></textarea>
+    <button onclick="createPost()">發表</button>
+</div>
 
-    <!-- 發文區域，登入後顯示 -->
-    <div id="post-section" style="display: none;">
-        <h2>創建新貼文</h2>
-        <textarea id="post-content" placeholder="你在想什麼？" rows="3"></textarea>
-        <button onclick="createPost()">發表貼文</button>
-        <div class="blog-container" id="feedContainer">
-            <!-- 貼文顯示區域 -->
-        </div>
-    </div>
+<div class="blog-container" id="feedContainer"></div>
 
-    <script>
-        // 加入登入功能
-        async function login() {
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
+<script>
+    document.addEventListener("DOMContentLoaded", loadPosts);
 
-            // 使用模組中的auth.js來模擬登入
-            const response = await auth.login(email, password);
-            if (response.success) {
-                alert('登入成功！');
-                document.getElementById('auth-section').style.display = 'none';
-                document.getElementById('post-section').style.display = 'block';
-                loadPosts(); // 載入貼文
-            } else {
-                alert(response.message || '登入失敗');
-            }
-        }
+    function createPost() {
+        const content = document.getElementById('postContent').value;
+        const user_id = 1; // 假設使用者 ID 已經取得並存儲在此處，實際應從登入資訊中取得
 
-        // 貼文功能
-        async function createPost() {
-            const content = document.getElementById('post-content').value;
-            if (content) {
-                // 呼叫 API 新增貼文
-                const response = await api.addLearningGoal(content);
-                if (response.success) {
+        if (content) {
+            fetch('/createPost', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_id, content })
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
                     alert('發文成功！');
-                    document.getElementById('post-content').value = '';
-                    loadPosts(); // 重新載入貼文
+                    loadPosts(); // 刷新貼文列表
+                    document.getElementById('postContent').value = ''; // 清空輸入框
                 } else {
-                    alert('發文失敗');
+                    alert(result.message || '發文失敗，請重試');
                 }
-            } else {
-                alert('請填寫內容');
-            }
-        }
-
-        // 載入貼文
-        async function loadPosts() {
-            const feedContainer = document.getElementById('feedContainer');
-            feedContainer.innerHTML = ''; // 清空現有貼文
-            const posts = await api.getDailyLearningList(); // 假設這個方法模擬載入貼文
-            posts.forEach((post) => {
-                const postCard = document.createElement('div');
-                postCard.className = 'post-card';
-                postCard.innerHTML = 
-                    <div class="post-content">
-                        <p>${post.name}</p>
-                        <span class="post-time">進度：${post.progress}%</span>
-                    </div>
-                    <div class="interaction-buttons">
-                        <button onclick="likePost(${post.id})">👍 按讚</button>
-                    </div>
-                ;
-                feedContainer.appendChild(postCard);
+            })
+            .catch(error => {
+                console.error('發文錯誤:', error);
+                alert('發文失敗，請檢查伺服器連線');
             });
+        } else {
+            alert('請寫些內容再發表！');
         }
+    }
 
-        // 模擬按讚功能
-        function likePost(postId) {
-            alert(您對貼文 ${postId} 按讚！);
+    function loadPosts() {
+        const feedContainer = document.getElementById('feedContainer');
+        feedContainer.innerHTML = '';
+        const posts = JSON.parse(localStorage.getItem("posts")) || [];
+
+        posts.forEach((post, index) => {
+            const postCard = document.createElement('div');
+            postCard.className = 'post-card';
+            postCard.innerHTML = `
+                <div class="post-content">
+                    <p>${post.content}</p>
+                    <span class="post-time">${post.time}</span>
+                </div>
+                <div class="interaction-buttons">
+                    <button onclick="likePost(${index})">👍 按讚 (${post.likes})</button>
+                    <button onclick="toggleCommentSection(${index})">💬 留言</button>
+                </div>
+                <div class="comments-section" id="comments-${index}" style="display: none;">
+                    <textarea id="commentInput-${index}" placeholder="寫下你的留言..." rows="2"></textarea>
+                    <button onclick="addComment(${index})">添加留言</button>
+                    <div class="comments-list">
+                        ${post.comments.map(comment => `<p>${comment}</p>`).join('')}
+                    </div>
+                </div>
+            `;
+            feedContainer.appendChild(postCard);
+        });
+    }
+
+    function likePost(index) {
+        const posts = JSON.parse(localStorage.getItem("posts"));
+        posts[index].likes += 1;
+        localStorage.setItem("posts", JSON.stringify(posts));
+        loadPosts();
+    }
+
+    function toggleCommentSection(index) {
+        const commentSection = document.getElementById(`comments-${index}`);
+        commentSection.style.display = commentSection.style.display === "none" ? "block" : "none";
+    }
+
+    function addComment(index) {
+        const commentInput = document.getElementById(`commentInput-${index}`);
+        const comment = commentInput.value;
+        if (comment) {
+            const posts = JSON.parse(localStorage.getItem("posts"));
+            posts[index].comments.push(comment);
+            localStorage.setItem("posts", JSON.stringify(posts));
+            commentInput.value = '';
+            loadPosts();
+        } else {
+            alert('請寫些內容再留言！');
         }
-    </script>
-</body>
-</html>
+    }
+</script>
+
+
+</body></html>
