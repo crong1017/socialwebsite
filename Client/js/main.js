@@ -1,11 +1,9 @@
-// 引入 API 和驗證模組
 import auth from './auth.js';
 import api from './api.js';
 
 const main = {
   // 初始化應用
   init: async () => {
-    // 檢查使用者登入狀態
     const isLoggedIn = await main.checkLoginStatus();
     if (isLoggedIn) {
       main.loadDailyLearningList();
@@ -16,7 +14,6 @@ const main = {
 
   // 顯示登入畫面
   showLoginScreen: () => {
-    // 這裡應該是顯示登入畫面的邏輯
     console.log("請登入");
   },
 
@@ -24,6 +21,7 @@ const main = {
   login: async (username, password) => {
     const response = await auth.login(username, password);
     if (response.success) {
+      localStorage.setItem("token", response.token); // 儲存 token
       console.log(response.message);
       main.loadDailyLearningList();
     } else {
@@ -35,14 +33,14 @@ const main = {
   logout: async () => {
     const response = await auth.logout();
     if (response.success) {
+      localStorage.removeItem("token"); // 移除 token
       console.log(response.message);
       main.showLoginScreen();
     }
   },
 
-  // 檢查登入狀態（這裡可以模擬 token 驗證）
+  // 檢查登入狀態
   checkLoginStatus: async () => {
-    // 檢查是否存在 token
     return !!localStorage.getItem("token");
   },
 
@@ -50,17 +48,17 @@ const main = {
   loadDailyLearningList: async () => {
     const learningList = await api.getDailyLearningList();
     console.log("每日學習清單:", learningList);
-
-    // 這裡可以顯示在 app 畫面上
     main.displayLearningList(learningList);
   },
 
   // 顯示學習清單
   displayLearningList: (learningList) => {
-    // 迭代學習清單並顯示在畫面上
+    const container = document.getElementById("learning-list");
+    container.innerHTML = ""; // 清空現有內容
     learningList.forEach((item) => {
-      console.log(`學習項目：${item.name}, 進度：${item.progress}%`);
-      // 這裡應用程式介面應該有顯示邏輯
+      const listItem = document.createElement("div");
+      listItem.textContent = `學習項目：${item.name}, 進度：${item.progress}%`;
+      container.appendChild(listItem);
     });
   },
 
