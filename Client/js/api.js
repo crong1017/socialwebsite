@@ -1,32 +1,113 @@
-// 模擬 API 端點
 const api = {
-  // 使用者學習清單
-  getDailyLearningList: async () => {
-    return [
-      { id: 1, name: '閱讀英文', progress: 30 },
-      { id: 2, name: '數學練習', progress: 50 },
-    ];
+  // 用戶註冊
+  register: async (username, email, password) => {
+    const response = await fetch('/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ username, email, password })
+    });
+    return await response.json();  // 返回伺服器的回應
   },
 
-  // 新增學習目標
-  addLearningGoal: async (goalName) => {
-    return { success: true, message: "新增學習目標成功" };
+  // 用戶登入
+  login: async (username, password) => {
+    const response = await fetch('/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ username, password })
+    });
+    return await response.json();
   },
 
-  // 更新學習進度
-  updateProgress: async (goalId, progress) => {
-    return { success: true, message: "學習進度已更新" };
+  // 創建新貼文
+  createPost: async (userId, content) => {
+    const response = await fetch('/createPost', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ userId, content })
+    });
+    return await response.json();
   },
 
-  // 編輯學習目標名稱
-  editLearningGoal: async (goalId, newName) => {
-    return { success: true, message: "學習目標名稱已更改" };
+  // 取得所有貼文
+  getPosts: async () => {
+    const response = await fetch('/getPosts', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    return await response.json();
   },
 
-  // 刪除學習目標
-  deleteLearningGoal: async (goalId) => {
-    return { success: true, message: "學習目標已刪除" };
+  // 按讚貼文
+  likePost: async (postId) => {
+    const response = await fetch(`/likePost/${postId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    return await response.json();
+  },
+
+  // 新增留言
+  addComment: async (postId, comment) => {
+    const response = await fetch(`/addComment/${postId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ comment })
+    });
+    return await response.json();
+  },
+
+  // 取得某個貼文的留言
+  getComments: async (postId) => {
+    const response = await fetch(`/getComments/${postId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    return await response.json();
   }
 };
 
-export default api;
+// 範例使用
+(async () => {
+  // 註冊
+  const registerResult = await api.register('username', 'email@example.com', 'password123');
+  console.log(registerResult);
+
+  // 登入
+  const loginResult = await api.login('username', 'password123');
+  console.log(loginResult);
+
+  // 創建貼文
+  const createPostResult = await api.createPost(1, '這是我的新貼文');
+  console.log(createPostResult);
+
+  // 顯示所有貼文
+  const posts = await api.getPosts();
+  console.log(posts);
+
+  // 按讚貼文
+  const likePostResult = await api.likePost(1);
+  console.log(likePostResult);
+
+  // 新增留言
+  const addCommentResult = await api.addComment(1, '這是我的留言');
+  console.log(addCommentResult);
+
+  // 顯示貼文的留言
+  const comments = await api.getComments(1);
+  console.log(comments);
+})();
