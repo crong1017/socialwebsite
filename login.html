@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>登入泡泡糖社交</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>註冊與登入 - 泡泡糖社交</title>
+    <link rel="stylesheet" href="auth.css">
 </head>
 <body>
 <div class="auth-container">
@@ -18,13 +18,13 @@
     <form id="registerForm" style="display: none;">
         <h2>註冊</h2>
         <label for="username">使用者名稱</label>
-        <input type="text" id="username" name="username" required>
+        <input type="text" id="username" name="username" required="">
 
         <label for="email">電子郵件</label>
-        <input type="email" id="registerEmail" name="email" required>
+        <input type="email" id="registerEmail" name="email" required="">
 
         <label for="password">密碼</label>
-        <input type="password" id="registerPassword" name="password" required>
+        <input type="password" id="registerPassword" name="password" required="">
 
         <button type="submit">註冊</button>
     </form>
@@ -32,11 +32,11 @@
     <!-- 登入表單 -->
     <form id="loginForm" style="display: none;">
         <h2>登入</h2>
-        <label for="username">使用者名稱</label>
-        <input type="text" id="loginUsername" name="username" required>
+        <label for="email">電子郵件</label>
+        <input type="email" id="loginEmail" name="email" required="">
 
         <label for="password">密碼</label>
-        <input type="password" id="loginPassword" name="password" required>
+        <input type="password" id="loginPassword" name="password" required="">
 
         <button type="submit">登入</button>
     </form>
@@ -78,7 +78,7 @@
     document.getElementById('loginForm').addEventListener('submit', async function(event) {
         event.preventDefault();
 
-        const username = document.getElementById('loginUsername').value;
+        const email = document.getElementById('loginEmail').value;
         const password = document.getElementById('loginPassword').value;
 
         const response = await fetch('/login', {
@@ -86,14 +86,14 @@
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ username, password })
+            body: JSON.stringify({ email, password })
         });
 
         const result = await response.json();
         if (result.success) {
             alert('登入成功！');
             window.location.href = 'index.html'; // 跳轉到發文頁面
-        } else if (result.message === 'User not found') {
+        } else if (result.message === '使用者未註冊') { // 如果後端回傳此訊息，表示未註冊
             alert('您尚未註冊，請先註冊！');
             showForm('register'); // 顯示註冊表單
         } else {
@@ -101,5 +101,6 @@
         }
     });
 </script>
-</body>
-</html>
+
+
+</body></html>
