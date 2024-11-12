@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>註冊與登入 - 泡泡糖社交</title>
+    <title>登入 - 泡泡糖社交</title>
     <link rel="stylesheet" href="Client/css/styles.css">
 </head>
 <body>
@@ -30,7 +30,7 @@
     </form>
 
     <!-- 登入表單 -->
-    <form id="loginForm" style="display: none;">
+    <form id="loginForm" style="display: block;">
         <h2>登入</h2>
         <label for="username">使用者名稱</label>
         <input type="text" id="loginUsername" name="username" required>
@@ -49,32 +49,7 @@
         document.getElementById('loginForm').style.display = form === 'login' ? 'block' : 'none';
     }
 
-    // 處理註冊請求
-    document.getElementById('registerForm').addEventListener('submit', async function(event) {
-        event.preventDefault();
-
-        const username = document.getElementById('username').value;
-        const email = document.getElementById('registerEmail').value;
-        const password = document.getElementById('registerPassword').value;
-
-        const response = await fetch('/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ username, email, password })
-        });
-
-        const result = await response.json();
-        if (result.success) {
-            alert('註冊成功！請登入。');
-            showForm('login'); // 顯示登入表單
-        } else {
-            alert(result.message || '註冊失敗，請再試一次。');
-        }
-    });
-
-    // 處理登入請求
+    // 登入邏輯
     document.getElementById('loginForm').addEventListener('submit', async function(event) {
         event.preventDefault();
 
@@ -83,19 +58,14 @@
 
         const response = await fetch('/login', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password })
         });
 
         const result = await response.json();
         if (result.success) {
             alert('登入成功！');
-            window.location.href = 'index.html'; // 跳轉到發文頁面
-        } else if (result.message === 'User not found') {
-            alert('您尚未註冊，請先註冊！');
-            showForm('register'); // 顯示註冊表單
+            window.location.href = 'index.html';  // 跳轉到主頁
         } else {
             alert(result.message || '登入失敗，請檢查帳號或密碼。');
         }
@@ -103,4 +73,3 @@
 </script>
 </body>
 </html>
-
