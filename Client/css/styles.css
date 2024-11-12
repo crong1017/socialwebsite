@@ -13,6 +13,77 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    font-size: 18px;
+}
+
+/* 登入容器樣式 */
+.auth-container {
+    background: #fdfdfd;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    margin: 100px auto;
+}
+
+.auth-container h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #4a4e50;
+}
+
+.auth-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-container label {
+    margin-bottom: 5px;
+    color: #4a4e50;
+    text-align: left;
+}
+
+.auth-container input {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #cdd7db;
+    background-color: #e8ebec;
+    color: #4a4e50;
+    font-size: 1em;
+}
+
+.auth-container button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #8fa7b3;
+    color: #ffffff;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.auth-container button:hover {
+    background-color: #738f9a;
+}
+
+.auth-container p {
+    margin-top: 10px;
+}
+
+.auth-container a {
+    color: #8fa7b3;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.auth-container a:hover {
+    color: #738f9a;
 }
 
 /* 頁眉樣式 */
@@ -20,7 +91,7 @@ body {
     background-color: #a8bfc9;
     color: #fdfdfd;
     width: 100%;
-    padding: 15px 20px;
+    padding: 20px;
     text-align: center;
     border-bottom: 1px solid #cdd7db;
 }
@@ -39,13 +110,59 @@ body {
 .header nav a {
     color: #fdfdfd;
     text-decoration: none;
-    font-size: 1em;
+    font-size: 1.2em;
     padding: 5px 10px;
     transition: color 0.3s;
 }
 
 .header nav a:hover {
     color: #dfe5e7;
+}
+
+/* 個人檔案區域樣式 */
+.profile-section {
+    background: #fdfdfd;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    width: 100%;
+    max-width: 800px;
+}
+
+.profile-section h2 {
+    font-size: 1.8em;
+    color: #4a4e50;
+    margin-bottom: 15px;
+}
+
+/* 貼文列表區域 */
+.post-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* 貼文卡片樣式 */
+.post-card {
+    background-color: #fdfdfd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border: 1px solid #cdd7db;
+}
+
+.post-content {
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    color: #4a4e50;
+}
+
+.post-time {
+    color: #a0a9ac;
+    font-size: 0.9em;
+    margin-top: 5px;
 }
 
 /* 發文區樣式 */
@@ -92,38 +209,6 @@ body {
     width: 100%;
 }
 
-/* 貼文卡片樣式 */
-.post-card {
-    background-color: #fdfdfd;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 15px;
-    border: 1px solid #cdd7db;
-}
-
-.post-content {
-    margin-bottom: 10px;
-}
-
-.post-time {
-    color: #a0a9ac;
-    font-size: 0.9em;
-}
-
-.interaction-buttons button {
-    background: none;
-    border: none;
-    color: #8fa7b3;
-    cursor: pointer;
-    margin-right: 10px;
-    font-size: 1em;
-}
-
-.interaction-buttons button:hover {
-    color: #738f9a;
-}
-
 /* 留言區樣式 */
 .comments-section {
     margin-top: 10px;
@@ -150,3 +235,62 @@ body {
     margin-bottom: 5px;
     color: #4a4e50;
 }
+
+/* 按鈕互動樣式 */
+.interaction-buttons button {
+    background: none;
+    border: none;
+    color: #8fa7b3;
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: 1em;
+}
+
+.interaction-buttons button:hover {
+    color: #738f9a;
+}
+.interaction-buttons button:hover {
+    color: #738f9a;
+}
+
+register.html
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>註冊 - 泡泡糖社交</title>
+    <link rel="stylesheet" href="Client/css/styles.css">
+</head>
+<body>
+<div class="auth-container">
+    <h1>註冊</h1>
+    <input id="username" type="text" placeholder="使用者名稱">
+    <input id="email" type="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Password">
+    <button onclick="register()">註冊</button>
+</div>
+<script>
+    // 註冊邏輯
+    async function register() {
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        const response = await fetch('/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, email, password })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            alert('註冊成功！');
+            window.location.href = 'login.html';  // 跳轉到登入頁面
+        } else {
+            alert(result.message || '註冊失敗');
+        }
+    }
+</script>
+</body>
+</html>
