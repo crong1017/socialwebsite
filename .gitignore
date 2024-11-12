@@ -1,5 +1,6 @@
 ### IntelliJ IDEA ###
 out/
+.idea/                # 忽略 .idea 資料夾
 !**/src/main/**/out/
 !**/src/test/**/out/
 
