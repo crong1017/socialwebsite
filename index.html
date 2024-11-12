@@ -1,11 +1,136 @@
+login.html
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>註冊與登入 - 泡泡糖社交</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="auth-container">
+    <h1>泡泡糖社交</h1>
+    <div id="formSwitcher">
+        <button onclick="showForm('register')">註冊</button>
+        <button onclick="showForm('login')">登入</button>
+    </div>
+
+    <!-- 註冊表單 -->
+    <form id="registerForm" style="display: none;">
+        <h2>註冊</h2>
+        <label for="username">使用者名稱</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="email">電子郵件</label>
+        <input type="email" id="registerEmail" name="email" required>
+
+        <label for="password">密碼</label>
+        <input type="password" id="registerPassword" name="password" required>
+
+        <button type="submit">註冊</button>
+    </form>
+
+    <!-- 登入表單 -->
+    <form id="loginForm" style="display: none;">
+        <h2>登入</h2>
+        <label for="username">使用者名稱</label>
+        <input type="text" id="loginUsername" name="username" required>
+
+        <label for="password">密碼</label>
+        <input type="password" id="loginPassword" name="password" required>
+
+        <button type="submit">登入</button>
+    </form>
+</div>
+
+<script>
+    // 切換顯示表單
+    function showForm(form) {
+        document.getElementById('registerForm').style.display = form === 'register' ? 'block' : 'none';
+        document.getElementById('loginForm').style.display = form === 'login' ? 'block' : 'none';
+    }
+
+    // 處理註冊請求
+    document.getElementById('registerForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('registerEmail').value;
+        const password = document.getElementById('registerPassword').value;
+
+        const response = await fetch('/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, email, password })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            alert('註冊成功！請登入。');
+            showForm('login'); // 顯示登入表單
+        } else {
+            alert(result.message || '註冊失敗，請再試一次。');
+        }
+    });
+
+    // 處理登入請求
+    document.getElementById('loginForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const username = document.getElementById('loginUsername').value;
+        const password = document.getElementById('loginPassword').value;
+
+        const response = await fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            alert('登入成功！');
+            window.location.href = 'index.html'; // 跳轉到發文頁面
+        } else if (result.message === 'User not found') {
+            alert('您尚未註冊，請先註冊！');
+            showForm('register'); // 顯示註冊表單
+        } else {
+            alert(result.message || '登入失敗，請檢查帳號或密碼。');
+        }
+    });
+</script>
+</body>
+</html>
+
+register.html
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>註冊 - 泡泡糖社交</title>
+    <script src="script.js"></script>
+</head>
+<body>
+    <h1>註冊</h1>
+    <input id="username" type="text" placeholder="使用者名稱">
+    <input id="email" type="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Password">
+    <button onclick="register()">註冊</button>
+</body>
+</html>
+
+index.html
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>泡泡糖社交</title>
-    <link rel="stylesheet" href="styles.css">
-    <script type="module" src="Client/css/styles.css"></script>
+    <link rel="stylesheet" href="Client/css/styles.css">
+    <script type="module" src="Client/js/main.js"></script>
 </head>
 <body>
     <header class="header">
@@ -78,7 +203,7 @@
             posts.forEach((post) => {
                 const postCard = document.createElement('div');
                 postCard.className = 'post-card';
-                postCard.innerHTML = `
+                postCard.innerHTML = 
                     <div class="post-content">
                         <p>${post.name}</p>
                         <span class="post-time">進度：${post.progress}%</span>
@@ -86,14 +211,14 @@
                     <div class="interaction-buttons">
                         <button onclick="likePost(${post.id})">👍 按讚</button>
                     </div>
-                `;
+                ;
                 feedContainer.appendChild(postCard);
             });
         }
 
         // 模擬按讚功能
         function likePost(postId) {
-            alert(`您對貼文 ${postId} 按讚！`);
+            alert(您對貼文 ${postId} 按讚！);
         }
     </script>
 </body>
