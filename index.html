@@ -24,12 +24,15 @@
     <!-- 貼文會顯示在這裡 -->
 </div>
 
+<!-- 加入學習清單顯示的容器 -->
+<div id="learning-list"></div>
+
 <script>
     document.addEventListener("DOMContentLoaded", loadPosts);
 
     function createPost() {
         const content = document.getElementById('postContent').value;
-        const user_id = 1; // 假設使用者 ID 已經取得並存儲在此處，實際應從登入資訊中取得
+        const user_id = 1;
 
         if (content) {
             fetch('/createPost', {
@@ -43,8 +46,8 @@
             .then(result => {
                 if (result.success) {
                     alert('發文成功！');
-                    loadPosts(); // 刷新貼文列表
-                    document.getElementById('postContent').value = ''; // 清空輸入框
+                    loadPosts();
+                    document.getElementById('postContent').value = '';
                 } else {
                     alert(result.message || '發文失敗，請重試');
                 }
@@ -113,6 +116,8 @@
         }
     }
 </script>
+
+<!-- 加入 main.js 模組腳本 -->
+<script type="module" src="Client/js/main.js"></script>
 </body>
 </html>
-
