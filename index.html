@@ -54,6 +54,47 @@
             color: #333;
         }
 
+        .user-menu {
+            position: relative;
+        }
+
+        .user-icon {
+            cursor: pointer;
+            background-color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 10px 20px;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #f0f0f0;
+        }
+
         .container {
             display: flex;
             margin: 20px auto;
@@ -109,6 +150,36 @@
             border: 1px solid #ddd;
         }
 
+        .interaction-buttons {
+            margin-top: 10px;
+        }
+
+        .interaction-buttons button {
+            margin-right: 5px;
+            background-color: #eeeeee;
+            color: #333;
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .interaction-buttons button:hover {
+            background-color: #dddddd;
+        }
+
+        .comment-section {
+            margin-top: 10px;
+        }
+
+        .comment-section input {
+            width: calc(100% - 20px);
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
         .side-post {
             background: #ffffff;
             padding: 10px;
@@ -123,8 +194,15 @@
     <header class="header">
         <h1>泡泡糖社交</h1>
         <div class="search-bar">
-            <input type="text" placeholder="搜尋貼文...">
+            <input type="text" placeholder="搜尋貼文..." id="searchInput">
             <button onclick="searchPosts()">🔍</button>
+        </div>
+        <div class="user-menu">
+            <div class="user-icon" onclick="toggleDropdown()">👤</div>
+            <div class="dropdown-menu" id="dropdownMenu">
+                <a href="login.html">登入</a>
+                <a href="register.html">註冊</a>
+            </div>
         </div>
     </header>
 
@@ -151,8 +229,9 @@
     </div>
 
     <script>
-        function searchPosts() {
-            alert('搜尋功能尚未實現');
+        function toggleDropdown() {
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
         }
 
         function createPost() {
@@ -169,13 +248,8 @@
                 likes: 0
             };
 
-            // 新貼文添加到左側
             renderPost(post, 'feedContainer');
-
-            // 添加到右側其他貼文
             renderPost(post, 'sideFeedContainer');
-
-            // 清空輸入框
             document.getElementById('post-content').value = '';
         }
 
@@ -186,23 +260,67 @@
             postCard.innerHTML = `
                 <p>${post.content}</p>
                 <small>${post.time}</small>
+                <div class="interaction-buttons">
+                    <button onclick="likePost(${post.id})">👍 按讚 (<span id="like-count-${post.id}">${post.likes}</span>)</button>
+                    <button onclick="toggleComment(${post.id})">💬 留言</button>
+                </div>
+                <div class="comment-section" id="comment-section-${post.id}" style="display: none;">
+                    <input type="text" placeholder="輸入留言..." onkeydown="addComment(event, ${post.id})">
+                    <div id="comments-${post.id}"></div>
+                </div>
             `;
             container.prepend(postCard);
         }
 
-        // 預設模擬的貼文數據
-        const mockPosts = [
-            { id: 1, content: '這是最近的貼文1', time: '2024/11/18 14:50' },
-            { id: 2, content: '這是最近的貼文2', time: '2024/11/18 14:45' },
-            { id: 3, content: '這是其他的貼文1', time: '2024/11/18 14:40' },
-            { id: 4, content: '這是其他的貼文2', time: '2024/11/18 14:35' }
-        ];
+        function likePost(postId) {
+            const likeCount = document.getElementById(`like-count-${postId}`);
+            likeCount.textContent = parseInt(likeCount.textContent) + 1;
+        }
 
-        // 初始化貼文到頁面
-        mockPosts.forEach((post, index) => {
-            if (index < 2) renderPost(post, 'feedContainer');
-            else renderPost(post, 'sideFeedContainer');
-        });
+        function toggleComment(postId) {
+            const commentSection = document.getElementById(`comment-section-${postId}`);
+            commentSection.style.display = commentSection.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function addComment(event, postId) {
+            if (event.key === 'Enter') {
+                const commentInput = event.target;
+                const commentText = commentInput.value.trim();
+                if (!commentText) {
+                    alert('請輸入留言內容');
+                    return;
+                }
+
+                const commentContainer = document.getElementById(`comments-${postId}`);
+                const comment = document.createElement('div');
+                comment.textContent = commentText;
+                commentContainer.appendChild(comment);
+                commentInput.value = '';
+            }
+        }
+
+        async function searchPosts() {
+            const searchInput = document.getElementById('searchInput').value.trim();
+            if (!searchInput) {
+                alert('請輸入搜尋內容');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/posts?keyword=${encodeURIComponent(searchInput)}`);
+                const posts = await response.json();
+
+                const feedContainer = document.getElementById('feedContainer');
+                feedContainer.innerHTML = '';
+                if (posts.length > 0) {
+                    posts.forEach(post => renderPost(post, 'feedContainer'));
+                } else {
+                    feedContainer.innerHTML = '<p>未找到相關貼文</p>';
+                }
+            } catch (error) {
+                console.error('查詢失敗', error);
+            }
+        }
     </script>
 </body>
 </html>
