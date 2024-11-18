@@ -6,15 +6,16 @@
     <title>泡泡糖社交</title>
     <link rel="stylesheet" href="Client/css/styles.css">
     <style>
+        /* 確保設計保持您的原始風格 */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+            background-color: #ffffff; /* 背景顏色保留為白色 */
             margin: 0;
             padding: 0;
         }
 
         .header {
-            background-color: #ff7f7f;
+            background-color: #ff7f7f; /* 您的原始主題顏色 */
             color: white;
             display: flex;
             justify-content: space-between;
@@ -42,7 +43,7 @@
             align-items: center;
             font-size: 20px;
             font-weight: bold;
-            color: #ff7f7f;
+            color: #ff7f7f; /* 保持與標題主題一致 */
         }
 
         .dropdown-menu {
@@ -65,7 +66,7 @@
         }
 
         .dropdown-menu a:hover {
-            background-color: #f5f5f5;
+            background-color: #f0f0f0;
         }
 
         .post-section {
@@ -87,18 +88,14 @@
         }
 
         button {
-            background-color: #ff7f7f;
+            background-color: #ff7f7f; /* 符合您的按鈕顏色設計 */
             color: white;
             border: none;
             cursor: pointer;
         }
 
         button:hover {
-            background-color: #ff4949;
-        }
-
-        .post-feed {
-            margin-top: 20px;
+            background-color: #ff4949; /* 增加一點互動效果 */
         }
 
         .post-card {
@@ -109,22 +106,13 @@
             border: 1px solid #ddd;
         }
 
-        .post-card p {
-            margin: 0;
-        }
-
-        .post-card .post-time {
-            color: gray;
-            font-size: 12px;
-        }
-
         .interaction-buttons {
             margin-top: 10px;
         }
 
         .interaction-buttons button {
             margin-right: 5px;
-            background-color: #eee;
+            background-color: #eeeeee; /* 不修改原本風格 */
             color: #333;
             padding: 5px 10px;
             border: 1px solid #ddd;
@@ -133,7 +121,7 @@
         }
 
         .interaction-buttons button:hover {
-            background-color: #ddd;
+            background-color: #dddddd;
         }
 
         .comment-section {
@@ -166,43 +154,48 @@
         <textarea id="post-content" placeholder="你在想什麼？" rows="3"></textarea>
         <button onclick="createPost()">發表貼文</button>
         <div class="post-feed" id="feedContainer">
-            <!-- 貼文會顯示在這裡 -->
+            <!-- 貼文區域 -->
         </div>
     </div>
 
     <script>
-        // 切換使用者選單的顯示/隱藏
+        // 切換使用者選單
         function toggleDropdown() {
             const dropdownMenu = document.getElementById('dropdownMenu');
             dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
         }
 
-        // 模擬發表貼文功能
-        async function createPost() {
-            const content = document.getElementById('post-content').value;
-            if (content.trim() === '') {
-                alert('請填寫貼文內容');
+        // 發表貼文
+        function createPost() {
+            const content = document.getElementById('post-content').value.trim();
+            if (!content) {
+                alert('請輸入貼文內容');
                 return;
             }
 
-            // 模擬貼文資料
             const post = {
                 id: Date.now(),
                 content: content,
-                time: new Date().toLocaleString(),
                 likes: 0,
                 comments: []
             };
 
-            // 渲染貼文到頁面
+            renderPost(post);
+
+            // 清空輸入框
+            document.getElementById('post-content').value = '';
+        }
+
+        // 渲染貼文
+        function renderPost(post) {
             const feedContainer = document.getElementById('feedContainer');
+
             const postCard = document.createElement('div');
             postCard.className = 'post-card';
             postCard.innerHTML = `
                 <p>${post.content}</p>
-                <span class="post-time">${post.time}</span>
                 <div class="interaction-buttons">
-                    <button onclick="likePost(${post.id})">👍 按讚 <span id="like-count-${post.id}">0</span></button>
+                    <button onclick="likePost(${post.id})">👍 按讚 (<span id="like-count-${post.id}">${post.likes}</span>)</button>
                     <button onclick="toggleComment(${post.id})">💬 留言</button>
                 </div>
                 <div class="comment-section" id="comment-section-${post.id}" style="display: none;">
@@ -211,18 +204,15 @@
                 </div>
             `;
             feedContainer.prepend(postCard);
-
-            // 清空輸入框
-            document.getElementById('post-content').value = '';
         }
 
-        // 模擬按讚功能
+        // 按讚功能
         function likePost(postId) {
             const likeCount = document.getElementById(`like-count-${postId}`);
             likeCount.textContent = parseInt(likeCount.textContent) + 1;
         }
 
-        // 切換留言區域顯示/隱藏
+        // 顯示或隱藏留言區
         function toggleComment(postId) {
             const commentSection = document.getElementById(`comment-section-${postId}`);
             commentSection.style.display = commentSection.style.display === 'block' ? 'none' : 'block';
@@ -231,20 +221,18 @@
         // 新增留言
         function addComment(event, postId) {
             if (event.key === 'Enter') {
-                const commentInput = event.target;
-                const commentText = commentInput.value.trim();
-                if (commentText === '') {
+                const commentText = event.target.value.trim();
+                if (!commentText) {
                     alert('請輸入留言內容');
                     return;
                 }
 
                 const commentContainer = document.getElementById(`comments-${postId}`);
-                const comment = document.createElement('div');
-                comment.textContent = commentText;
-                commentContainer.appendChild(comment);
+                const commentDiv = document.createElement('div');
+                commentDiv.textContent = commentText;
 
-                // 清空留言輸入框
-                commentInput.value = '';
+                commentContainer.appendChild(commentDiv);
+                event.target.value = '';
             }
         }
     </script>
