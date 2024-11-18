@@ -3,40 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>註冊泡泡糖社交</title>
+    <title>登入 - 泡泡糖社交</title>
     <link rel="stylesheet" href="Client/css/styles.css">
 </head>
 <body>
-<div class="auth-container">
-    <h1>註冊</h1>
-    <input id="username" type="text" placeholder="使用者名稱">
-    <input id="email" type="email" placeholder="Email">
-    <input id="password" type="password" placeholder="Password">
-    <button onclick="register()">註冊</button>
-</div>
+    <header class="header">
+        <h1>登入泡泡糖社交</h1>
+    </header>
 
-<script>
-    // 註冊邏輯
-    async function register() {
-        const username = document.getElementById('username').value;
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
+    <div id="auth-section">
+        <h2>登入</h2>
+        <input id="login-email" type="email" placeholder="Email">
+        <input id="login-password" type="password" placeholder="Password">
+        <button onclick="login()">登入</button>
+        <p>還沒有帳號？ <a href="register.html">註冊</a></p>
+    </div>
 
-        const response = await fetch('/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, email, password })
-        });
+    <script>
+        async function login() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
 
-        const result = await response.json();
-        if (result.success) {
-            alert('註冊成功！');
-            window.location.href = 'login.html';  // 跳轉到登入頁面
-        } else {
-            alert(result.message || '註冊失敗');
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                alert('登入成功！');
+                window.location.href = "home.html"; // 登入後進入主頁
+            } else {
+                alert(result.message || '登入失敗');
+            }
         }
-    }
-</script>
+    </script>
 </body>
 </html>
-
