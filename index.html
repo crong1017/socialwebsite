@@ -8,103 +8,62 @@
 </head>
 <body>
     <header class="header">
-        <h1>泡泡糖社交</h1>
-        <nav>
-            <a href="register.html" class="profile-button">註冊</a>
-        </nav>
+        <h1>歡迎來到泡泡糖社交</h1>
     </header>
 
-    <!-- 登入區域 -->
-    <div id="auth-section">
-        <h2>登入</h2>
-        <input id="login-email" type="email" placeholder="Email">
-        <input id="login-password" type="password" placeholder="Password">
-        <button onclick="login()">登入</button>
-        <p>還沒有帳號？ <a href="register.html">註冊</a></p>
-    </div>
-
-    <!-- 發文區域，登入後顯示 -->
-    <div id="post-section" style="display: none;">
-        <h2>創建新貼文</h2>
-        <textarea id="post-content" placeholder="你在想什麼？" rows="3"></textarea>
-        <button onclick="createPost()">發表貼文</button>
-        <div class="blog-container" id="feedContainer">
-            <!-- 貼文顯示區域 -->
+    <div id="welcome-section">
+        <p>歡迎來到泡泡糖社交，與好友分享生活點滴。</p>
+        <div class="action-buttons">
+            <a href="login.html" class="button">登入</a>
+            <a href="register.html" class="button">註冊</a>
         </div>
     </div>
 
-    <script>
-        // 加入登入功能
-        async function login() {
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-
-            const response = await fetch('/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
-
-            const result = await response.json();
-            if (result.success) {
-                alert('登入成功！');
-                document.getElementById('auth-section').style.display = 'none';
-                document.getElementById('post-section').style.display = 'block';
-                loadPosts(); // 載入貼文
-            } else {
-                alert(result.message || '登入失敗');
-            }
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            text-align: center;
+            padding: 20px;
         }
 
-        // 發表貼文功能
-        async function createPost() {
-            const content = document.getElementById('post-content').value;
-            if (content) {
-                // 呼叫 API 新增貼文
-                const response = await fetch('/createPost', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ content })
-                });
-                const result = await response.json();
-                if (result.success) {
-                    alert('發文成功！');
-                    document.getElementById('post-content').value = '';
-                    loadPosts(); // 重新載入貼文
-                } else {
-                    alert('發文失敗');
-                }
-            } else {
-                alert('請填寫內容');
-            }
+        .header {
+            background-color: #ff7f7f;
+            color: white;
+            padding: 15px;
+            margin-bottom: 20px;
         }
 
-        // 載入貼文
-        async function loadPosts() {
-            const feedContainer = document.getElementById('feedContainer');
-            feedContainer.innerHTML = ''; // 清空現有貼文
-            const posts = await fetch('/posts'); // 假設這個方法模擬載入貼文
-            const postsData = await posts.json();
-            postsData.forEach(post => {
-                const postCard = document.createElement('div');
-                postCard.className = 'post-card';
-                postCard.innerHTML = `
-                    <div class="post-content">
-                        <p>${post.content}</p>
-                        <span class="post-time">${post.time}</span>
-                    </div>
-                    <div class="interaction-buttons">
-                        <button onclick="likePost(${post.id})">👍 按讚</button>
-                    </div>
-                `;
-                feedContainer.appendChild(postCard);
-            });
+        .header h1 {
+            margin: 0;
         }
 
-        // 模擬按讚功能
-        function likePost(postId) {
-            alert(`您對貼文 ${postId} 按讚！`);
+        #welcome-section {
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: inline-block;
         }
-    </script>
+
+        .action-buttons {
+            margin-top: 20px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 0 10px;
+            background-color: #ff7f7f;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .button:hover {
+            background-color: #ff4949;
+        }
+    </style>
 </body>
 </html>
