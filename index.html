@@ -28,13 +28,37 @@
             font-size: 24px;
         }
 
-        .user-menu {
+        .search-bar {
             display: flex;
             align-items: center;
-            gap: 10px;
+            width: 40%;
+            max-width: 400px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #fff;
         }
 
-        .user-icon, .profile-button {
+        .search-bar input {
+            border: none;
+            flex-grow: 1;
+            padding: 5px;
+            outline: none;
+        }
+
+        .search-bar button {
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .user-icon {
             cursor: pointer;
             background-color: #f0f0f0;
             border-radius: 50%;
@@ -44,20 +68,31 @@
             justify-content: center;
             align-items: center;
             font-size: 20px;
+            font-weight: bold;
             color: #333;
         }
 
-        .profile-button {
-            background-color: #ff7f7f;
-            color: white;
-            border-radius: 20px;
-            width: auto;
-            padding: 5px 10px;
-            font-size: 16px;
+        .dropdown-menu {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
         }
 
-        .profile-button:hover {
-            background-color: #ff4949;
+        .dropdown-menu a {
+            display: block;
+            padding: 10px 20px;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #f0f0f0;
         }
 
         .modal {
@@ -103,11 +138,14 @@
 <body>
     <header class="header">
         <h1>泡泡糖社交</h1>
+        <div class="search-bar">
+            <input type="text" placeholder="搜尋貼文...">
+            <button onclick="searchPosts()">🔍</button>
+        </div>
         <div class="user-menu">
-            <!-- 右上角使用者按鈕 -->
-            <div class="profile-button" onclick="checkLoginBeforeProfile()">個人主頁</div>
             <div class="user-icon" onclick="toggleDropdown()">👤</div>
             <div class="dropdown-menu" id="dropdownMenu">
+                <a href="#" onclick="checkLoginBeforeProfile()">個人主頁</a>
                 <a href="login.html">登入</a>
                 <a href="register.html">註冊</a>
             </div>
@@ -187,16 +225,9 @@
                 return;
             }
 
-            const postContainer = document.createElement('div');
-            postContainer.className = 'post-card';
-            postContainer.innerHTML = `
-                <p>${content}</p>
-                <small>${new Date().toLocaleString()}</small>
-            `;
-
-            document.body.appendChild(postContainer); // 模擬添加到頁面
-            alert('貼文已發表');
+            alert('貼文已發表！');
         }
     </script>
 </body>
 </html>
+
