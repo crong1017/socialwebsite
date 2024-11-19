@@ -6,6 +6,7 @@
     <title>泡泡糖社交</title>
     <link rel="stylesheet" href="Client/css/styles.css">
     <style>
+        /* 保留原有樣式 */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -134,15 +135,6 @@
             border: 1px solid #ddd;
         }
 
-        .side-post {
-            background: #ffffff;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
         .modal {
             position: fixed;
             top: 0;
@@ -173,7 +165,7 @@
         }
 
         .modal-content .login-btn {
-            background-color: #ff7f7f;
+            background-color: #4da6ff; /* 淺藍色 */
             color: white;
         }
 
@@ -268,50 +260,51 @@
             window.location.href = "register.html";
         }
 
-        function createPost() {
+        async function createPost() {
             const content = document.getElementById('post-content').value.trim();
             if (!content) {
                 alert('請輸入貼文內容');
                 return;
             }
 
-            const postContainer = document.createElement('div');
-            postContainer.className = 'post-card';
-            postContainer.innerHTML = `
-                <p>${content}</p>
-                <small>${new Date().toLocaleString()}</small>
-            `;
-
-            document.getElementById('feedContainer').prepend(postContainer);
-            document.getElementById('post-content').value = '';
+            try {
+                const response = await fetch('/api/posts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content })
+                });
+                const post = await response.json();
+                createPostItem(post, 'feedContainer');
+                alert('貼文成功！');
+            } catch (err) {
+                console.error('貼文失敗：', err);
+            }
         }
 
-        // 渲染模擬貼文數據
-        const mockPosts = [
-            { id: 1, content: '這是最近的貼文1', time: '2024/11/18 14:50' },
-            { id: 2, content: '這是最近的貼文2', time: '2024/11/18 14:45' },
-            { id: 3, content: '這是其他的貼文1', time: '2024/11/18 14:40' },
-            { id: 4, content: '這是其他的貼文2', time: '2024/11/18 14:35' }
-        ];
-
-        mockPosts.forEach((post, index) => {
-            if (index < 2) {
-                createPostItem(post, 'feedContainer');
-            } else {
-                createPostItem(post, 'sideFeedContainer');
+        // 渲染貼文資料
+        async function fetchPosts() {
+            try {
+                const response = await fetch('/api/posts');
+                const posts = await response.json();
+                posts.forEach(post => createPostItem(post, 'feedContainer'));
+            } catch (err) {
+                console.error('獲取貼文失敗：', err);
             }
-        });
+        }
 
         function createPostItem(post, containerId) {
             const container = document.getElementById(containerId);
             const postCard = document.createElement('div');
-            postCard.className = containerId === 'feedContainer' ? 'post-card' : 'side-post';
+            postCard.className = 'post-card';
             postCard.innerHTML = `
                 <p>${post.content}</p>
-                <small>${post.time}</small>
+                <small>${new Date(post.createdAt).toLocaleString()}</small>
             `;
             container.appendChild(postCard);
         }
+
+        // 頁面加載時獲取貼文
+        fetchPosts();
     </script>
 </body>
 </html>
