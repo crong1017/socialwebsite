@@ -32,10 +32,9 @@
             align-items: center;
             width: 40%;
             max-width: 400px;
-            border: 1px solid #ddd;
             border-radius: 8px;
             padding: 5px;
-            background-color: #fff;
+            background-color: white;
         }
 
         .search-bar input {
@@ -186,8 +185,11 @@
         </div>
         <div class="user-menu">
             <div class="user-icon" onclick="toggleDropdown()">👤</div>
-              <div class="dropdown-menu" id="dropdownMenu">
+            <div class="dropdown-menu" id="dropdownMenu">
                 <a href="home.html">個人主頁</a>
+                <a href="login.html">登入</a>
+                <a href="register.html">註冊</a>
+            </div>
         </div>
     </header>
 
@@ -208,7 +210,6 @@
         </div>
     </div>
 
-    <!-- 登入/註冊確認模態框 -->
     <div class="modal" id="authModal" onclick="closeModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
             <p>請先登入或註冊以繼續操作</p>
@@ -219,6 +220,11 @@
 
     <script>
         let isLoggedIn = false;
+
+        function toggleDropdown() {
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+        }
 
         function checkLoginBeforePost() {
             if (!isLoggedIn) {
@@ -284,4 +290,5 @@
     </script>
 </body>
 </html>
+
 
