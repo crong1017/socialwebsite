@@ -6,7 +6,6 @@
     <title>泡泡糖社交</title>
     <link rel="stylesheet" href="Client/css/styles.css">
     <style>
-        /* 保留原有樣式 */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -73,29 +72,6 @@
             color: #333;
         }
 
-        .dropdown-menu {
-            position: absolute;
-            top: 50px;
-            right: 0;
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            display: none;
-            z-index: 1000;
-        }
-
-        .dropdown-menu a {
-            display: block;
-            padding: 10px 20px;
-            color: #333;
-            text-decoration: none;
-        }
-
-        .dropdown-menu a:hover {
-            background-color: #f0f0f0;
-        }
-
         .container {
             display: flex;
             margin: 20px auto;
@@ -135,6 +111,24 @@
             border: 1px solid #ddd;
         }
 
+        .interaction-buttons {
+            margin-top: 10px;
+        }
+
+        .interaction-buttons button {
+            margin-right: 5px;
+            background-color: #eeeeee;
+            color: #333;
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .interaction-buttons button:hover {
+            background-color: #dddddd;
+        }
+
         .modal {
             position: fixed;
             top: 0;
@@ -149,11 +143,12 @@
         }
 
         .modal-content {
-            background-color: white;
+            background-color: #e7f3ff;
             padding: 20px;
             border-radius: 8px;
             text-align: center;
             width: 300px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .modal-content button {
@@ -165,13 +160,21 @@
         }
 
         .modal-content .login-btn {
-            background-color: #4da6ff; /* 淺藍色 */
+            background-color: #4da6ff;
             color: white;
         }
 
+        .modal-content .login-btn:hover {
+            background-color: #3385ff;
+        }
+
         .modal-content .register-btn {
-            background-color: #ddd;
+            background-color: #cccccc;
             color: #333;
+        }
+
+        .modal-content .register-btn:hover {
+            background-color: #b3b3b3;
         }
     </style>
 </head>
@@ -184,16 +187,10 @@
         </div>
         <div class="user-menu">
             <div class="user-icon" onclick="toggleDropdown()">👤</div>
-            <div class="dropdown-menu" id="dropdownMenu">
-                <a href="#" onclick="checkLoginBeforeProfile()">個人主頁</a>
-                <a href="login.html">登入</a>
-                <a href="register.html">註冊</a>
-            </div>
         </div>
     </header>
 
     <div class="container">
-        <!-- 左側主要貼文區 -->
         <div class="main-content">
             <div class="post-section">
                 <h2>創建新貼文</h2>
@@ -201,22 +198,18 @@
                 <button onclick="checkLoginBeforePost()">發表貼文</button>
             </div>
             <div id="feedContainer">
-                <!-- 最近的貼文 -->
+                <!-- 貼文區 -->
             </div>
         </div>
 
-        <!-- 右側其他貼文區 -->
         <div class="side-content">
             <h3>其他貼文</h3>
-            <div id="sideFeedContainer">
-                <!-- 其他貼文 -->
-            </div>
         </div>
     </div>
 
     <!-- 登入/註冊確認模態框 -->
-    <div class="modal" id="authModal">
-        <div class="modal-content">
+    <div class="modal" id="authModal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
             <p>請先登入或註冊以繼續操作</p>
             <button class="login-btn" onclick="redirectToLogin()">登入</button>
             <button class="register-btn" onclick="redirectToRegister()">註冊</button>
@@ -226,30 +219,40 @@
     <script>
         let isLoggedIn = false;
 
-        function toggleDropdown() {
-            const dropdownMenu = document.getElementById('dropdownMenu');
-            dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
-        }
-
         function checkLoginBeforePost() {
             if (!isLoggedIn) {
                 showAuthModal();
             } else {
-                createPost();
+                alert('發表貼文成功！');
             }
         }
 
-        function checkLoginBeforeProfile() {
+        function likePost() {
             if (!isLoggedIn) {
                 showAuthModal();
             } else {
-                window.location.href = "home.html";
+                alert('您已按讚！');
+            }
+        }
+
+        function commentOnPost() {
+            if (!isLoggedIn) {
+                showAuthModal();
+            } else {
+                alert('留言成功！');
             }
         }
 
         function showAuthModal() {
             const modal = document.getElementById('authModal');
             modal.style.display = 'flex';
+        }
+
+        function closeModal(event) {
+            if (event.target.id === 'authModal') {
+                const modal = document.getElementById('authModal');
+                modal.style.display = 'none';
+            }
         }
 
         function redirectToLogin() {
@@ -260,51 +263,24 @@
             window.location.href = "register.html";
         }
 
-        async function createPost() {
-            const content = document.getElementById('post-content').value.trim();
-            if (!content) {
-                alert('請輸入貼文內容');
-                return;
-            }
-
-            try {
-                const response = await fetch('/api/posts', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ content })
-                });
-                const post = await response.json();
-                createPostItem(post, 'feedContainer');
-                alert('貼文成功！');
-            } catch (err) {
-                console.error('貼文失敗：', err);
-            }
-        }
-
-        // 渲染貼文資料
-        async function fetchPosts() {
-            try {
-                const response = await fetch('/api/posts');
-                const posts = await response.json();
-                posts.forEach(post => createPostItem(post, 'feedContainer'));
-            } catch (err) {
-                console.error('獲取貼文失敗：', err);
-            }
-        }
-
-        function createPostItem(post, containerId) {
-            const container = document.getElementById(containerId);
+        function createPostItem(content) {
+            const postContainer = document.getElementById('feedContainer');
             const postCard = document.createElement('div');
             postCard.className = 'post-card';
             postCard.innerHTML = `
-                <p>${post.content}</p>
-                <small>${new Date(post.createdAt).toLocaleString()}</small>
+                <p>${content}</p>
+                <div class="interaction-buttons">
+                    <button onclick="likePost()">👍 按讚</button>
+                    <button onclick="commentOnPost()">💬 留言</button>
+                </div>
             `;
-            container.appendChild(postCard);
+            postContainer.appendChild(postCard);
         }
 
-        // 頁面加載時獲取貼文
-        fetchPosts();
+        // 渲染初始模擬貼文
+        createPostItem("這是第一篇貼文！");
+        createPostItem("這是第二篇貼文！");
     </script>
 </body>
 </html>
+
