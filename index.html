@@ -95,6 +95,54 @@
             background-color: #f0f0f0;
         }
 
+        .container {
+            display: flex;
+            margin: 20px auto;
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        .main-content {
+            flex: 3;
+            margin-right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .side-content {
+            flex: 1;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-section textarea, .post-section button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+
+        .post-card {
+            background: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .side-post {
+            background: #ffffff;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
         .modal {
             position: fixed;
             top: 0;
@@ -152,10 +200,26 @@
         </div>
     </header>
 
-    <div class="post-section">
-        <h2>創建新貼文</h2>
-        <textarea id="post-content" placeholder="你在想什麼？" rows="3"></textarea>
-        <button onclick="checkLoginBeforePost()">發表貼文</button>
+    <div class="container">
+        <!-- 左側主要貼文區 -->
+        <div class="main-content">
+            <div class="post-section">
+                <h2>創建新貼文</h2>
+                <textarea id="post-content" placeholder="你在想什麼？" rows="3"></textarea>
+                <button onclick="checkLoginBeforePost()">發表貼文</button>
+            </div>
+            <div id="feedContainer">
+                <!-- 最近的貼文 -->
+            </div>
+        </div>
+
+        <!-- 右側其他貼文區 -->
+        <div class="side-content">
+            <h3>其他貼文</h3>
+            <div id="sideFeedContainer">
+                <!-- 其他貼文 -->
+            </div>
+        </div>
     </div>
 
     <!-- 登入/註冊確認模態框 -->
@@ -168,16 +232,13 @@
     </div>
 
     <script>
-        // 模擬用戶是否已登入
-        let isLoggedIn = false; // 初始設為未登入
+        let isLoggedIn = false;
 
-        // 切換使用者選單顯示
         function toggleDropdown() {
             const dropdownMenu = document.getElementById('dropdownMenu');
             dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
         }
 
-        // 發文前檢查是否登入
         function checkLoginBeforePost() {
             if (!isLoggedIn) {
                 showAuthModal();
@@ -186,38 +247,27 @@
             }
         }
 
-        // 個人主頁前檢查是否登入
         function checkLoginBeforeProfile() {
             if (!isLoggedIn) {
                 showAuthModal();
             } else {
-                window.location.href = "home.html"; // 跳轉到個人主頁
+                window.location.href = "home.html";
             }
         }
 
-        // 顯示登入/註冊模態框
         function showAuthModal() {
             const modal = document.getElementById('authModal');
             modal.style.display = 'flex';
         }
 
-        // 隱藏模態框
-        function hideAuthModal() {
-            const modal = document.getElementById('authModal');
-            modal.style.display = 'none';
-        }
-
-        // 跳轉到登入頁面
         function redirectToLogin() {
             window.location.href = "login.html";
         }
 
-        // 跳轉到註冊頁面
         function redirectToRegister() {
             window.location.href = "register.html";
         }
 
-        // 發表貼文
         function createPost() {
             const content = document.getElementById('post-content').value.trim();
             if (!content) {
@@ -225,9 +275,43 @@
                 return;
             }
 
-            alert('貼文已發表！');
+            const postContainer = document.createElement('div');
+            postContainer.className = 'post-card';
+            postContainer.innerHTML = `
+                <p>${content}</p>
+                <small>${new Date().toLocaleString()}</small>
+            `;
+
+            document.getElementById('feedContainer').prepend(postContainer);
+            document.getElementById('post-content').value = '';
+        }
+
+        // 渲染模擬貼文數據
+        const mockPosts = [
+            { id: 1, content: '這是最近的貼文1', time: '2024/11/18 14:50' },
+            { id: 2, content: '這是最近的貼文2', time: '2024/11/18 14:45' },
+            { id: 3, content: '這是其他的貼文1', time: '2024/11/18 14:40' },
+            { id: 4, content: '這是其他的貼文2', time: '2024/11/18 14:35' }
+        ];
+
+        mockPosts.forEach((post, index) => {
+            if (index < 2) {
+                createPostItem(post, 'feedContainer');
+            } else {
+                createPostItem(post, 'sideFeedContainer');
+            }
+        });
+
+        function createPostItem(post, containerId) {
+            const container = document.getElementById(containerId);
+            const postCard = document.createElement('div');
+            postCard.className = containerId === 'feedContainer' ? 'post-card' : 'side-post';
+            postCard.innerHTML = `
+                <p>${post.content}</p>
+                <small>${post.time}</small>
+            `;
+            container.appendChild(postCard);
         }
     </script>
 </body>
 </html>
-
