@@ -4,6 +4,7 @@ node_modules/
 
 ### IntelliJ IDEA ###
 out/
+.idea/                # 忽略 .idea 資料夾
 !**/src/main/**/out/
 !**/src/test/**/out/
 
@@ -31,4 +32,7 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+<<<<<<< HEAD
 >>>>>>> 54f4e3de9319c0df1741839a9f4d5625a15d8088
+=======
+>>>>>>> 09334ec13b7cd5fee708791361e99200deac5380

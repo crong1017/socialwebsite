@@ -1,10 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>註冊 - 泡泡糖社交</title>
+    <link rel="stylesheet" href="Client/css/styles.css">
 </head>
 <body>
+    <header class="header">
+        <h1>註冊泡泡糖社交</h1>
+    </header>
 
+    <div id="register-section">
+        <h2>註冊</h2>
+        <input id="register-email" type="email" placeholder="Email">
+        <input id="register-password" type="password" placeholder="Password">
+        <input id="register-confirm-password" type="password" placeholder="確認密碼">
+        <button onclick="register()">註冊</button>
+        <p>已有帳號？ <a href="login.html">登入</a></p>
+    </div>
+
+    <script>
+        async function register() {
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+
+            if (password !== confirmPassword) {
+                alert('密碼不一致，請重新輸入');
+                return;
+            }
+
+            const response = await fetch('/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                alert('註冊成功！請登入');
+                window.location.href = "login.html"; // 註冊後跳轉到登入頁
+            } else {
+                alert(result.message || '註冊失敗');
+            }
+        }
+    </script>
 </body>
 </html>
