@@ -3,8 +3,8 @@ const bcrypt = require('bcrypt'); // 用於密碼雜湊
 const jwt = require('jsonwebtoken'); // 用於生成 JWT 令牌
 const User = require('../models/User'); // 假設你有一個 User 模型
 
-// JWT 的密鑰
-const JWT_SECRET = 'your_jwt_secret'; // 在正式環境中替換為安全的密鑰
+// 從環境變數中讀取 JWT_SECRET
+const JWT_SECRET = process.env.JWT_SECRET || 'default_secret'; // 開發環境提供預設值
 
 // 註冊新使用者
 exports.register = async (req, res) => {
