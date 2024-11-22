@@ -14,6 +14,7 @@ body {
     min-height: 100vh;
 }
 
+/* 頁首樣式 */
 .header {
     background-color: #a8bfc9;
     color: #fdfdfd;
@@ -23,6 +24,13 @@ body {
     position: sticky;
     top: 0;
     z-index: 1000;
+}
+
+/* 右上角圓點樣式 */
+.user-menu {
+    position: absolute;
+    top: 20px;
+    right: 20px; /* 將圓點移到右上角 */
 }
 
 .user-icon {
@@ -40,6 +48,7 @@ body {
     position: relative;
 }
 
+/* 貼文樣式 */
 .blog-container {
     margin-top: 20px;
 }
@@ -52,6 +61,7 @@ body {
     border-radius: 5px;
 }
 
+/* 登入區樣式 */
 #loginSection {
     display: none;
     position: fixed;
@@ -64,4 +74,5 @@ body {
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
 
