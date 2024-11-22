@@ -10,17 +10,17 @@
     <header class="header">
         <h1 class="gradient-text">泡泡糖社交</h1>
         <div class="user-menu">
-            <div class="user-icon" id="userIcon" style="display: none;" onclick="handleUserIconClick()">👤</div>
+            <div class="user-icon" id="userIcon" onclick="handleUserIconClick()">👤</div>
         </div>
     </header>
 
     <div class="container">
         <!-- 貼文區 -->
-        <div id="feedContainer" class="blog-container" style="display: none;">
+        <div id="feedContainer" class="blog-container">
             <!-- 貼文將動態載入到這裡 -->
         </div>
 
-        <!-- 登入區 -->
+        <!-- 登入區（僅在未登入時顯示） -->
         <div id="loginSection" class="auth-container" style="display: none;">
             <h2>登入</h2>
             <input id="login-email" type="email" placeholder="Email" required>
@@ -34,66 +34,10 @@
         <p>© 2024 泡泡糖社交 - All rights reserved.</p>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const isLoggedIn = localStorage.getItem('token') !== null;
-
-            if (isLoggedIn) {
-                // 使用者已登入，顯示貼文區
-                document.getElementById('feedContainer').style.display = 'block';
-                document.getElementById('userIcon').style.display = 'block';
-                loadPosts();
-            } else {
-                // 使用者未登入，顯示登入表單
-                document.getElementById('loginSection').style.display = 'block';
-            }
-        });
-
-        function handleUserIconClick() {
-            window.location.href = 'home.html';
-        }
-
-        function login() {
-            const email = document.getElementById('login-email').value.trim();
-            const password = document.getElementById('login-password').value.trim();
-
-            if (!email || !password) {
-                alert('請輸入帳號與密碼！');
-                return;
-            }
-
-            // 模擬登入檢查（應改為向後端發送請求）
-            if (email === "test@example.com" && password === "123456") {
-                alert('登入成功！');
-                localStorage.setItem('token', 'fake-token'); // 模擬儲存 Token
-                location.reload(); // 重新載入頁面以顯示貼文
-            } else {
-                alert('登入失敗，請檢查您的帳號或密碼');
-            }
-        }
-
-        function loadPosts() {
-            const feedContainer = document.getElementById('feedContainer');
-            feedContainer.innerHTML = ''; // 清空貼文區
-            const posts = [
-                { content: "這是第一篇貼文！", time: "2024-11-22" },
-                { content: "這是第二篇貼文！", time: "2024-11-22" },
-            ];
-            posts.forEach(post => {
-                const postCard = document.createElement('div');
-                postCard.className = 'post-card';
-                postCard.innerHTML = `
-                    <div class="post-content">
-                        <p>${post.content}</p>
-                        <span class="post-time">${post.time}</span>
-                    </div>
-                `;
-                feedContainer.appendChild(postCard);
-            });
-        }
-    </script>
+    <script src="js/main.js" type="module"></script>
 </body>
 </html>
+
 
 
 
