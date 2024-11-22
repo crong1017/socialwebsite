@@ -16,7 +16,16 @@ const main = {
 
       // 記錄用戶已經看過引導
       localStorage.setItem('firstVisit', 'no');
+    } else {
+      // 如果不是首次進入，直接顯示貼文
+      main.showMainScreen();
     }
+  },
+
+  // 顯示主畫面
+  showMainScreen: () => {
+    const feedContainer = document.getElementById('feedContainer');
+    feedContainer.style.display = 'block'; // 顯示貼文區
   },
 
   // 更新右上角按鈕狀態
@@ -67,15 +76,13 @@ const main = {
 // 關閉引導畫面
 function closeGuide() {
   const overlay = document.getElementById('overlay');
-  if (overlay) {
-    overlay.style.display = 'none'; // 隱藏引導視窗
-  } else {
-    console.error("找不到引導視窗的元素 'overlay'");
-  }
+  overlay.style.display = 'none'; // 隱藏引導視窗
+  main.showMainScreen(); // 顯示主畫面
 }
 
 main.init();
 window.handleUserIconClick = main.handleUserIconClick;
+
 
 
 
