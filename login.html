@@ -29,27 +29,23 @@
                 return;
             }
 
-            try {
-                const response = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
 
-                const result = await response.json();
+            const result = await response.json();
 
-                if (result.success) {
-                    alert('登入成功！');
-                    localStorage.setItem('token', result.token);
-                    window.location.href = 'index.html';
-                } else {
-                    alert(result.message || '登入失敗，請檢查您的帳號或密碼');
-                }
-            } catch (error) {
-                console.error('登入過程中出錯：', error);
-                alert('系統錯誤，請稍後再試');
+            if (result.success) {
+                alert('登入成功！');
+                localStorage.setItem('token', result.token);
+                window.location.href = 'index.html';
+            } else {
+                alert(result.message || '登入失敗，請檢查您的帳號或密碼');
             }
         }
     </script>
 </body>
 </html>
+
