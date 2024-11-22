@@ -24,9 +24,12 @@ const main = {
   handleUserIconClick: () => {
     const target = document.getElementById('userIcon').getAttribute('data-target');
     if (target === 'index.html') {
-      document.getElementById('loginSection').style.display = 'block'; // 顯示登入表單
-    } else {
-      window.location.href = target; // 跳轉到個人頁面
+      // 顯示登入表單並隱藏貼文區
+      document.getElementById('loginSection').style.display = 'block';
+      document.getElementById('feedContainer').style.display = 'none';
+    } else if (target === 'home.html') {
+      // 跳轉到個人頁面
+      window.location.href = target;
     }
   },
 
@@ -73,5 +76,6 @@ const main = {
 main.init();
 window.handleUserIconClick = main.handleUserIconClick;
 window.login = main.login;
+
 
 
