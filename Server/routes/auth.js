@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const { checkToken } = require('../middleware/authMiddleware'); // 假設你有一個檢查 token 的中介層
 
 // 使用環境變數設定 JWT 密鑰
-const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
+const JWT_SECRET = process.env.JWT_SECRET || 'ac3893af177f54168484d5fb0372600e2c5f8b8292f022f4e280502e7e8297c29c8dfc833fa4778e49c632faac91c83de8a70bc3a4679365df68474dbf8e379a';
 
 // 用戶註冊
 router.post('/register', async (req, res) => {
