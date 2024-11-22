@@ -15,10 +15,12 @@
     </header>
 
     <div class="container">
+        <!-- 貼文區 -->
         <div id="feedContainer" class="blog-container" style="display: none;">
             <!-- 貼文將動態載入到這裡 -->
         </div>
 
+        <!-- 登入區 -->
         <div id="loginSection" class="auth-container" style="display: none;">
             <h2>登入</h2>
             <input id="login-email" type="email" placeholder="Email" required>
@@ -37,12 +39,12 @@
             const isLoggedIn = localStorage.getItem('token') !== null;
 
             if (isLoggedIn) {
-                // 使用者已登入：顯示貼文
+                // 使用者已登入，顯示貼文區
                 document.getElementById('feedContainer').style.display = 'block';
                 document.getElementById('userIcon').style.display = 'block';
                 loadPosts();
             } else {
-                // 使用者未登入：顯示登入表單
+                // 使用者未登入，顯示登入表單
                 document.getElementById('loginSection').style.display = 'block';
             }
         });
@@ -60,11 +62,11 @@
                 return;
             }
 
-            // 模擬登入（實際情況應使用後端 API）
+            // 模擬登入檢查（應改為向後端發送請求）
             if (email === "test@example.com" && password === "123456") {
                 alert('登入成功！');
                 localStorage.setItem('token', 'fake-token'); // 模擬儲存 Token
-                location.reload(); // 重新載入頁面，顯示貼文
+                location.reload(); // 重新載入頁面以顯示貼文
             } else {
                 alert('登入失敗，請檢查您的帳號或密碼');
             }
@@ -72,7 +74,7 @@
 
         function loadPosts() {
             const feedContainer = document.getElementById('feedContainer');
-            feedContainer.innerHTML = '';
+            feedContainer.innerHTML = ''; // 清空貼文區
             const posts = [
                 { content: "這是第一篇貼文！", time: "2024-11-22" },
                 { content: "這是第二篇貼文！", time: "2024-11-22" },
@@ -92,6 +94,7 @@
     </script>
 </body>
 </html>
+
 
 
 
