@@ -1,40 +1,30 @@
-// 引入認證模組 (auth.js) 和 API 模組 (api.js)
-import auth from './auth.js';
-import api from './api.js';
-
 const main = {
-  // 初始化應用
-  init: async () => {
+  init: () => {
     main.loadPosts(); // 預設載入貼文
     main.updateUserMenu(); // 更新右上角按鈕狀態
   },
 
-  // 更新右上角按鈕狀態
   updateUserMenu: () => {
     const isLoggedIn = localStorage.getItem('auth_token') !== null;
     const userIcon = document.getElementById('userIcon');
     if (isLoggedIn) {
-      userIcon.setAttribute('data-target', 'home.html'); // 登入跳轉至個人頁面
+      userIcon.setAttribute('data-target', 'home.html');
     } else {
-      userIcon.setAttribute('data-target', 'index.html'); // 未登入跳轉至登入表單
+      userIcon.setAttribute('data-target', 'index.html');
     }
   },
 
-  // 處理右上角按鈕點擊
   handleUserIconClick: () => {
-    const target = document.getElementById('userIcon').getAttribute('data-target');
-    if (target === 'index.html') {
-      // 顯示登入表單並隱藏貼文區
+    const isLoggedIn = localStorage.getItem('auth_token') !== null;
+    if (isLoggedIn) {
+      window.location.href = 'home.html';
+    } else {
       document.getElementById('loginSection').style.display = 'block';
       document.getElementById('feedContainer').style.display = 'none';
-    } else if (target === 'home.html') {
-      // 跳轉到個人頁面
-      window.location.href = target;
     }
   },
 
-  // 處理登入
-  login: async () => {
+  login: () => {
     const email = document.getElementById('login-email').value.trim();
     const password = document.getElementById('login-password').value.trim();
 
@@ -43,21 +33,24 @@ const main = {
       return;
     }
 
-    const response = await auth.login(email, password); // 假設 auth.login 處理登入邏輯
-    if (response.success) {
+    if (email === "test@example.com" && password === "123456") {
       alert('登入成功！');
-      localStorage.setItem('auth_token', response.token);
-      location.reload(); // 刷新頁面
+      localStorage.setItem('auth_token', 'fake-token');
+      location.reload();
     } else {
-      alert(response.message || '登入失敗');
+      alert('登入失敗，請檢查您的帳號或密碼');
     }
   },
 
-  // 載入貼文
-  loadPosts: async () => {
+  loadPosts: () => {
     const feedContainer = document.getElementById('feedContainer');
-    feedContainer.innerHTML = ''; // 清空貼文
-    const posts = await api.getPosts(); // 假設從 API 獲取貼文
+    feedContainer.innerHTML = '';
+
+    const posts = [
+      { content: "這是第一篇貼文！", time: "2024-11-22" },
+      { content: "這是第二篇貼文！", time: "2024-11-22" },
+    ];
+
     posts.forEach(post => {
       const postCard = document.createElement('div');
       postCard.className = 'post-card';
@@ -72,7 +65,6 @@ const main = {
   }
 };
 
-// 初始化應用
 main.init();
 window.handleUserIconClick = main.handleUserIconClick;
 window.login = main.login;
