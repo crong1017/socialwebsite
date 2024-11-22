@@ -10,18 +10,21 @@
     <header class="header">
         <h1 class="gradient-text">泡泡糖社交</h1>
         <div class="user-menu">
-            <div class="user-icon" onclick="handleUserIconClick()">👤
-                <span class="notification-badge" id="notificationCount">3</span>
-            </div>
+            <div class="user-icon" id="userIcon" style="display: none;" onclick="handleUserIconClick()">👤</div>
         </div>
     </header>
 
     <div class="container">
-        <div class="main-content">
-            <div id="feedContainer" class="blog-container">
-                <div class="skeleton"></div>
-                <div class="skeleton"></div>
-            </div>
+        <div id="feedContainer" class="blog-container" style="display: none;">
+            <!-- 貼文將動態載入到這裡 -->
+        </div>
+
+        <div id="loginSection" class="auth-container" style="display: none;">
+            <h2>登入</h2>
+            <input id="login-email" type="email" placeholder="Email" required>
+            <input id="login-password" type="password" placeholder="Password" required>
+            <button onclick="login()">登入</button>
+            <p>還沒有帳號？ <a href="register.html">註冊</a></p>
         </div>
     </div>
 
@@ -32,19 +35,38 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const isLoggedIn = localStorage.getItem('token') !== null;
-            if (!isLoggedIn) {
-                window.location.href = 'login.html';
-            } else {
+
+            if (isLoggedIn) {
+                // 使用者已登入：顯示貼文
+                document.getElementById('feedContainer').style.display = 'block';
+                document.getElementById('userIcon').style.display = 'block';
                 loadPosts();
+            } else {
+                // 使用者未登入：顯示登入表單
+                document.getElementById('loginSection').style.display = 'block';
             }
         });
 
         function handleUserIconClick() {
-            const isLoggedIn = localStorage.getItem('token') !== null;
-            if (isLoggedIn) {
-                window.location.href = 'home.html';
+            window.location.href = 'home.html';
+        }
+
+        function login() {
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value.trim();
+
+            if (!email || !password) {
+                alert('請輸入帳號與密碼！');
+                return;
+            }
+
+            // 模擬登入（實際情況應使用後端 API）
+            if (email === "test@example.com" && password === "123456") {
+                alert('登入成功！');
+                localStorage.setItem('token', 'fake-token'); // 模擬儲存 Token
+                location.reload(); // 重新載入頁面，顯示貼文
             } else {
-                window.location.href = 'login.html';
+                alert('登入失敗，請檢查您的帳號或密碼');
             }
         }
 
@@ -70,6 +92,7 @@
     </script>
 </body>
 </html>
+
 
 
 
