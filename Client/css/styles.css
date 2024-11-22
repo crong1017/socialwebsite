@@ -44,10 +44,17 @@ body {
     color: #333;
     cursor: pointer;
     position: relative;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.user-icon:hover {
+    background-color: #e0e0e0;
+    transform: scale(1.1); /* 懸浮放大效果 */
 }
 
 .blog-container {
     margin-top: 20px;
+    display: none; /* 預設主畫面貼文區隱藏 */
 }
 
 .post-card {
@@ -56,6 +63,25 @@ body {
     border: 1px solid #ddd;
     margin-bottom: 10px;
     border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.post-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.post-content {
+    font-size: 1.1em;
+    line-height: 1.5;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.post-time {
+    font-size: 0.9em;
+    color: #a0a9ac;
 }
 
 /* 引導提示樣式 */
@@ -102,12 +128,18 @@ body {
     padding: 10px 15px;
     cursor: pointer;
     font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .guide button:hover {
     background-color: #3385ff;
 }
 
+.guide button:active {
+    transform: scale(0.95); /* 按下時縮小效果 */
+}
+
+/* 漸變效果 */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -119,5 +151,21 @@ body {
     }
 }
 
+/* 響應式設計 */
+@media screen and (max-width: 768px) {
+    .guide {
+        width: 90%;
+        font-size: 0.9rem; /* 調整引導提示文字大小 */
+    }
 
+    .post-card {
+        padding: 10px;
+    }
+
+    .user-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 18px; /* 調整右上角圖示大小 */
+    }
+}
 
