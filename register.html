@@ -11,41 +11,69 @@
         <h1>註冊泡泡糖社交</h1>
     </header>
 
-    <div id="register-section" class="auth-container">
-        <h2>註冊</h2>
-        <input id="register-email" type="email" placeholder="Email">
-        <input id="register-password" type="password" placeholder="Password">
-        <input id="register-confirm-password" type="password" placeholder="確認密碼">
-        <button onclick="register()">註冊</button>
-        <p>已有帳號？ <a href="index.html">登入</a></p>
+    <div class="auth-container">
+        <!-- 登入區 -->
+        <div id="loginSection">
+            <h2>登入</h2>
+            <input id="login-email" type="email" placeholder="Email" required>
+            <input id="login-password" type="password" placeholder="Password" required>
+            <button onclick="login()">登入</button>
+            <p>還沒有帳號？ <a href="#registerSection">註冊</a></p>
+        </div>
+
+        <!-- 分隔線 -->
+        <hr style="margin: 20px 0;">
+
+        <!-- 註冊區 -->
+        <div id="registerSection">
+            <h2>註冊</h2>
+            <input id="register-email" type="email" placeholder="Email">
+            <input id="register-password" type="password" placeholder="Password">
+            <input id="register-confirm-password" type="password" placeholder="確認密碼">
+            <button onclick="register()">註冊</button>
+        </div>
     </div>
 
     <script>
+        async function login() {
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value.trim();
+
+            if (!email || !password) {
+                alert('請輸入帳號與密碼！');
+                return;
+            }
+
+            // 模擬登入邏輯
+            if (email === "test@example.com" && password === "123456") {
+                alert('登入成功！');
+                localStorage.setItem('auth_token', 'fake-token');
+                window.location.href = "index.html"; // 登入後跳轉到首頁
+            } else {
+                alert('登入失敗，請檢查您的帳號或密碼');
+            }
+        }
+
         async function register() {
-            const email = document.getElementById('register-email').value;
-            const password = document.getElementById('register-password').value;
-            const confirmPassword = document.getElementById('register-confirm-password').value;
+            const email = document.getElementById('register-email').value.trim();
+            const password = document.getElementById('register-password').value.trim();
+            const confirmPassword = document.getElementById('register-confirm-password').value.trim();
+
+            if (!email || !password || !confirmPassword) {
+                alert('請填寫所有欄位');
+                return;
+            }
 
             if (password !== confirmPassword) {
                 alert('密碼不一致，請重新輸入');
                 return;
             }
 
-            const response = await fetch('/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
-
-            const result = await response.json();
-            if (result.success) {
-                alert('註冊成功！請登入');
-                window.location.href = "login.html";
-            } else {
-                alert(result.message || '註冊失敗');
-            }
+            alert('註冊成功！請登入');
+            window.location.href = "index.html"; // 註冊後跳轉到登入頁
         }
     </script>
 </body>
 </html>
+
 
