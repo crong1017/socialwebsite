@@ -5,290 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>泡泡糖社交</title>
     <link rel="stylesheet" href="Client/css/styles.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
-        }
-
-        .header {
-            background-color: #98a8b8; /* 與發表貼文按鈕一致的淺藍色 */
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-        }
-
-        .header h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-
-        .search-bar {
-            display: flex;
-            align-items: center;
-            width: 40%;
-            max-width: 400px;
-            border-radius: 8px;
-            padding: 5px;
-            background-color: white;
-        }
-
-        .search-bar input {
-            border: none;
-            flex-grow: 1;
-            padding: 5px;
-            outline: none;
-        }
-
-        .search-bar button {
-            border: none;
-            background-color: transparent;
-            cursor: pointer;
-            font-size: 16px;
-            color: #333;
-        }
-
-        .user-menu {
-            position: relative;
-        }
-
-        .user-icon {
-            cursor: pointer;
-            background-color: #f0f0f0;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 20px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .container {
-            display: flex;
-            margin: 20px auto;
-            width: 90%;
-            max-width: 1200px;
-        }
-
-        .main-content {
-            flex: 3;
-            margin-right: 20px;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .side-content {
-            flex: 1;
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .post-section textarea, .post-section button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 4px;
-        }
-
-        .post-card {
-            background: #f9f9f9;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
-
-        .interaction-buttons {
-            margin-top: 10px;
-        }
-
-        .interaction-buttons button {
-            margin-right: 5px;
-            background-color: #eeeeee;
-            color: #333;
-            padding: 5px 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .interaction-buttons button:hover {
-            background-color: #dddddd;
-        }
-
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background-color: #e7f3ff;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-            width: 300px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .modal-content button {
-            margin: 10px;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .modal-content .login-btn {
-            background-color: #4da6ff;
-            color: white;
-        }
-
-        .modal-content .login-btn:hover {
-            background-color: #3385ff;
-        }
-
-        .modal-content .register-btn {
-            background-color: #cccccc;
-            color: #333;
-        }
-
-        .modal-content .register-btn:hover {
-            background-color: #b3b3b3;
-        }
-    </style>
 </head>
 <body>
     <header class="header">
         <h1>泡泡糖社交</h1>
-        <div class="search-bar">
-            <input type="text" placeholder="搜尋貼文...">
-            <button onclick="searchPosts()">🔍</button>
-        </div>
         <div class="user-menu">
-            <div class="user-icon" onclick="toggleDropdown()">👤</div>
-            <div class="dropdown-menu" id="dropdownMenu">
-                <a href="home.html">個人主頁</a>
-                <a href="login.html">登入</a>
-                <a href="register.html">註冊</a>
-            </div>
+            <div class="user-icon" onclick="handleUserIconClick()">👤</div>
         </div>
     </header>
 
     <div class="container">
         <div class="main-content">
-            <div class="post-section">
-                <h2>創建新貼文</h2>
-                <textarea id="post-content" placeholder="你在想什麼？" rows="3"></textarea>
-                <button onclick="checkLoginBeforePost()">發表貼文</button>
-            </div>
             <div id="feedContainer">
-                <!-- 貼文區 -->
+                <!-- 貼文將載入到此 -->
             </div>
-        </div>
-
-        <div class="side-content">
-            <h3>其他貼文</h3>
-        </div>
-    </div>
-
-    <div class="modal" id="authModal" onclick="closeModal(event)">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <p>請先登入或註冊以繼續操作</p>
-            <button class="login-btn" onclick="redirectToLogin()">登入</button>
-            <button class="register-btn" onclick="redirectToRegister()">註冊</button>
         </div>
     </div>
 
     <script>
-        let isLoggedIn = false;
-
-        function toggleDropdown() {
-            const dropdownMenu = document.getElementById('dropdownMenu');
-            dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
-        }
-
-        function checkLoginBeforePost() {
+        document.addEventListener('DOMContentLoaded', () => {
+            const isLoggedIn = localStorage.getItem('token') !== null;
             if (!isLoggedIn) {
-                showAuthModal();
+                window.location.href = 'login.html';
             } else {
-                alert('發表貼文成功！');
+                loadPosts();
             }
-        }
+        });
 
-        function likePost() {
-            if (!isLoggedIn) {
-                showAuthModal();
+        function handleUserIconClick() {
+            const isLoggedIn = localStorage.getItem('token') !== null;
+            if (isLoggedIn) {
+                window.location.href = 'home.html';
             } else {
-                alert('您已按讚！');
+                window.location.href = 'login.html';
             }
         }
 
-        function commentOnPost() {
-            if (!isLoggedIn) {
-                showAuthModal();
-            } else {
-                alert('留言成功！');
-            }
+        function loadPosts() {
+            const feedContainer = document.getElementById('feedContainer');
+            feedContainer.innerHTML = '';
+            const posts = [
+                { content: "這是第一篇貼文！", time: "2024-11-22" },
+                { content: "這是第二篇貼文！", time: "2024-11-22" },
+            ];
+            posts.forEach(post => {
+                const postCard = document.createElement('div');
+                postCard.className = 'post-card';
+                postCard.innerHTML = `
+                    <div class="post-content">
+                        <p>${post.content}</p>
+                        <span class="post-time">${post.time}</span>
+                    </div>
+                `;
+                feedContainer.appendChild(postCard);
+            });
         }
-
-        function showAuthModal() {
-            const modal = document.getElementById('authModal');
-            modal.style.display = 'flex';
-        }
-
-        function closeModal(event) {
-            if (event.target.id === 'authModal') {
-                const modal = document.getElementById('authModal');
-                modal.style.display = 'none';
-            }
-        }
-
-        function redirectToLogin() {
-            window.location.href = "login.html";
-        }
-
-        function redirectToRegister() {
-            window.location.href = "register.html";
-        }
-
-        function createPostItem(content) {
-            const postContainer = document.getElementById('feedContainer');
-            const postCard = document.createElement('div');
-            postCard.className = 'post-card';
-            postCard.innerHTML = `
-                <p>${content}</p>
-                <div class="interaction-buttons">
-                    <button onclick="likePost()">👍 按讚</button>
-                    <button onclick="commentOnPost()">💬 留言</button>
-                </div>
-            `;
-            postContainer.appendChild(postCard);
-        }
-
-        // 渲染初始模擬貼文
-        createPostItem("這是第一篇貼文！");
-        createPostItem("這是第二篇貼文！");
     </script>
 </body>
 </html>
-
 
