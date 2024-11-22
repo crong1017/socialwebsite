@@ -14,7 +14,6 @@ body {
     min-height: 100vh;
 }
 
-/* 頁首樣式 */
 .header {
     background-color: #a8bfc9;
     color: #fdfdfd;
@@ -26,11 +25,10 @@ body {
     z-index: 1000;
 }
 
-/* 右上角圓點樣式 */
 .user-menu {
     position: absolute;
     top: 20px;
-    right: 20px; /* 將圓點移到右上角 */
+    right: 20px;
 }
 
 .user-icon {
@@ -48,7 +46,6 @@ body {
     position: relative;
 }
 
-/* 貼文樣式 */
 .blog-container {
     margin-top: 20px;
 }
@@ -61,18 +58,65 @@ body {
     border-radius: 5px;
 }
 
-/* 登入區樣式 */
-#loginSection {
-    display: none;
+/* 引導提示樣式 */
+.overlay {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 999;
-    background-color: white;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    display: none; /* 預設隱藏 */
+    justify-content: center;
+    align-items: center;
+}
+
+.guide {
+    background: white;
     padding: 20px;
     border-radius: 8px;
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.guide h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.guide p {
+    margin-bottom: 20px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.guide button {
+    background-color: #4da6ff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.guide button:hover {
+    background-color: #3385ff;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 
