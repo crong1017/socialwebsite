@@ -26,7 +26,7 @@ const main = {
     if (isLoggedIn) {
       userIcon.setAttribute('data-target', 'home.html');
     } else {
-      userIcon.setAttribute('data-target', 'index.html');
+      userIcon.setAttribute('data-target', 'register.html');
     }
   },
 
@@ -67,11 +67,12 @@ const main = {
 // 關閉引導畫面
 function closeGuide() {
   const overlay = document.getElementById('overlay');
-  overlay.style.display = 'none';
+  overlay.style.display = 'none'; // 隱藏引導
 }
 
 main.init();
 window.handleUserIconClick = main.handleUserIconClick;
+
 
 
 
