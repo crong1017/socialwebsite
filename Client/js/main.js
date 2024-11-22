@@ -67,11 +67,16 @@ const main = {
 // 關閉引導畫面
 function closeGuide() {
   const overlay = document.getElementById('overlay');
-  overlay.style.display = 'none'; // 隱藏引導
+  if (overlay) {
+    overlay.style.display = 'none'; // 隱藏引導視窗
+  } else {
+    console.error("找不到引導視窗的元素 'overlay'");
+  }
 }
 
 main.init();
 window.handleUserIconClick = main.handleUserIconClick;
+
 
 
 
