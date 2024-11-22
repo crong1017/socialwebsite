@@ -19,14 +19,14 @@
         <div id="feedContainer" class="blog-container">
             <!-- 貼文將由 JavaScript 動態插入 -->
         </div>
+    </div>
 
-        <!-- 登入區 -->
-        <div id="loginSection" class="auth-container" style="display: none;">
-            <h2>登入</h2>
-            <input id="login-email" type="email" placeholder="Email" required>
-            <input id="login-password" type="password" placeholder="Password" required>
-            <button onclick="login()">登入</button>
-            <p>還沒有帳號？ <a href="register.html">註冊</a></p>
+    <div class="overlay" id="overlay">
+        <div class="guide">
+            <h2>歡迎來到泡泡糖社交！</h2>
+            <p>點擊右上角的圓點以登入或註冊，開始使用我們的功能。</p>
+            <p>您也可以瀏覽其他使用者的貼文，享受互動！</p>
+            <button onclick="closeGuide()">開始探索</button>
         </div>
     </div>
 
@@ -37,6 +37,7 @@
     <script src="Client/js/main.js" type="module"></script>
 </body>
 </html>
+
 
 
 
