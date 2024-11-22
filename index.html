@@ -8,19 +8,27 @@
 </head>
 <body>
     <header class="header">
-        <h1>泡泡糖社交</h1>
+        <h1 class="gradient-text">泡泡糖社交</h1>
         <div class="user-menu">
-            <div class="user-icon" onclick="handleUserIconClick()">👤</div>
+            <div class="user-icon" onclick="handleUserIconClick()">👤
+                <span class="notification-badge" id="notificationCount">3</span>
+            </div>
         </div>
     </header>
 
     <div class="container">
         <div class="main-content">
-            <div id="feedContainer">
+            <div id="feedContainer" class="blog-container">
                 <!-- 貼文將載入到此 -->
+                <div class="skeleton"></div>
+                <div class="skeleton"></div>
             </div>
         </div>
     </div>
+
+    <footer class="footer">
+        <p>© 2024 泡泡糖社交 - All rights reserved.</p>
+    </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -63,4 +71,5 @@
     </script>
 </body>
 </html>
+
 
