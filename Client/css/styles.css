@@ -16,7 +16,7 @@ body {
 
 /* 頁首樣式 */
 .header {
-    background-color: #7fa9c7;
+    background-color: #87a9b5; /* 莫蘭迪藍 */
     color: white;
     display: flex;
     justify-content: space-between;
@@ -149,10 +149,10 @@ body {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background: linear-gradient(to right, #4da6ff, #3385ff);
+    background: linear-gradient(to right, #87a9b5, #6b8f9a); /* 莫蘭迪漸層 */
     color: white;
     border: none;
-    border-radius: 50%;
+    border-radius: 50px;
     width: 60px;
     height: 60px;
     font-size: 14px;
@@ -160,6 +160,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: center;
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s, box-shadow 0.3s;
 }
@@ -211,7 +212,7 @@ body {
 }
 
 .guide button {
-    background-color: #4da6ff;
+    background-color: #87a9b5; /* 莫蘭迪藍 */
     color: white;
     border: none;
     border-radius: 8px;
@@ -223,7 +224,7 @@ body {
 }
 
 .guide button:hover {
-    background-color: #3385ff;
+    background-color: #6b8f9a;
     transform: translateY(-3px);
 }
 
