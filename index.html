@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="Client/css/styles.css">
 </head>
 <body>
+    <!-- 頁首 -->
     <header class="header">
         <h1>泡泡糖社交</h1>
         <div class="user-menu">
@@ -19,23 +20,22 @@
         </div>
     </header>
 
-    <main>
-        <div id="feedContainer">
-            <div class="post-card">
-                <h3>這是第一篇貼文！</h3>
-                <p>2024-11-22</p>
-                <div class="interaction-buttons">
-                    <button onclick="checkLogin('like')">👍 按讚</button>
-                    <button onclick="checkLogin('comment')">💬 留言</button>
-                </div>
+    <!-- 貼文區 -->
+    <main class="blog-container" id="feedContainer">
+        <div class="post-card">
+            <h3>這是第一篇貼文！</h3>
+            <p>2024-11-22</p>
+            <div class="interaction-buttons">
+                <button onclick="checkLogin('like')">👍 按讚</button>
+                <button onclick="checkLogin('comment')">💬 留言</button>
             </div>
-            <div class="post-card">
-                <h3>這是第二篇貼文！</h3>
-                <p>2024-11-22</p>
-                <div class="interaction-buttons">
-                    <button onclick="checkLogin('like')">👍 按讚</button>
-                    <button onclick="checkLogin('comment')">💬 留言</button>
-                </div>
+        </div>
+        <div class="post-card">
+            <h3>這是第二篇貼文！</h3>
+            <p>2024-11-22</p>
+            <div class="interaction-buttons">
+                <button onclick="checkLogin('like')">👍 按讚</button>
+                <button onclick="checkLogin('comment')">💬 留言</button>
             </div>
         </div>
     </main>
@@ -81,9 +81,19 @@
             const overlay = document.getElementById('overlay');
             overlay.style.display = 'flex';
         }
+
+        // 點擊頁面其他地方關閉下拉選單
+        window.addEventListener('click', function (e) {
+            const userMenu = document.querySelector('.user-menu');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            if (!userMenu.contains(e.target)) {
+                dropdownMenu.style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>
+
 
 
 
