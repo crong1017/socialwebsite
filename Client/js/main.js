@@ -12,7 +12,9 @@ const main = {
     if (isFirstVisit) {
       // 顯示引導畫面
       const overlay = document.getElementById('overlay');
-      overlay.style.display = 'flex';
+      if (overlay) {
+        overlay.style.display = 'flex'; // 顯示引導提示
+      }
 
       // 記錄用戶已經看過引導
       localStorage.setItem('firstVisit', 'no');
@@ -25,17 +27,25 @@ const main = {
   // 顯示主畫面
   showMainScreen: () => {
     const feedContainer = document.getElementById('feedContainer');
-    feedContainer.style.display = 'block'; // 顯示貼文區
+    if (feedContainer) {
+      feedContainer.style.display = 'block'; // 顯示貼文區
+    }
+    const overlay = document.getElementById('overlay');
+    if (overlay) {
+      overlay.style.display = 'none'; // 確保引導畫面被隱藏
+    }
   },
 
   // 更新右上角按鈕狀態
   updateUserMenu: () => {
     const isLoggedIn = localStorage.getItem('auth_token') !== null;
     const userIcon = document.getElementById('userIcon');
-    if (isLoggedIn) {
-      userIcon.setAttribute('data-target', 'home.html');
-    } else {
-      userIcon.setAttribute('data-target', 'register.html');
+    if (userIcon) {
+      if (isLoggedIn) {
+        userIcon.setAttribute('data-target', 'home.html');
+      } else {
+        userIcon.setAttribute('data-target', 'register.html');
+      }
     }
   },
 
@@ -43,46 +53,54 @@ const main = {
   handleUserIconClick: () => {
     const isLoggedIn = localStorage.getItem('auth_token') !== null;
     if (isLoggedIn) {
-      window.location.href = 'home.html';
+      window.location.href = 'home.html'; // 跳轉至主頁
     } else {
-      window.location.href = 'register.html';
+      window.location.href = 'register.html'; // 跳轉至註冊頁
     }
   },
 
   // 載入貼文
   loadPosts: () => {
     const feedContainer = document.getElementById('feedContainer');
-    feedContainer.innerHTML = '';
+    if (feedContainer) {
+      feedContainer.innerHTML = ''; // 清空貼文區域
 
-    const posts = [
-      { content: "這是第一篇貼文！", time: "2024-11-22" },
-      { content: "這是第二篇貼文！", time: "2024-11-22" },
-    ];
+      // 模擬貼文數據
+      const posts = [
+        { content: "這是第一篇貼文！", time: "2024-11-22" },
+        { content: "這是第二篇貼文！", time: "2024-11-22" },
+      ];
 
-    posts.forEach(post => {
-      const postCard = document.createElement('div');
-      postCard.className = 'post-card';
-      postCard.innerHTML = `
-        <div class="post-content">
-          <p>${post.content}</p>
-          <span class="post-time">${post.time}</span>
-        </div>
-      `;
-      feedContainer.appendChild(postCard);
-    });
+      // 動態生成貼文
+      posts.forEach(post => {
+        const postCard = document.createElement('div');
+        postCard.className = 'post-card';
+        postCard.innerHTML = `
+          <div class="post-content">
+            <p>${post.content}</p>
+            <span class="post-time">${post.time}</span>
+          </div>
+        `;
+        feedContainer.appendChild(postCard);
+      });
+    }
   }
 };
 
 // 關閉引導畫面
 function closeGuide() {
   const overlay = document.getElementById('overlay');
-  overlay.style.display = 'none'; // 隱藏引導視窗
+  if (overlay) {
+    overlay.style.display = 'none'; // 隱藏引導視窗
+  }
   main.showMainScreen(); // 顯示主畫面
 }
 
+// 初始化主程式
 main.init();
-window.handleUserIconClick = main.handleUserIconClick;
 
+// 將處理函數公開給全局
+window.handleUserIconClick = main.handleUserIconClick;
 
 
 
