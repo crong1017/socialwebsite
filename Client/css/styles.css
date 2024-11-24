@@ -7,7 +7,7 @@
 }
 
 body {
-    background-color: #e6e8e9;
+    background-color: #f3f5f7;
     color: #4a4e50;
     display: flex;
     flex-direction: column;
@@ -16,7 +16,7 @@ body {
 
 /* 頁首樣式 */
 .header {
-    background-color: #98a8b8;
+    background-color: #7fa9c7;
     color: white;
     display: flex;
     justify-content: space-between;
@@ -25,12 +25,13 @@ body {
     position: sticky;
     top: 0;
     z-index: 1000;
-    border-bottom: 1px solid #cdd7db;
+    border-bottom: 2px solid #c3d6e3;
 }
 
 .header h1 {
     margin: 0;
     font-size: 24px;
+    font-weight: bold;
 }
 
 .user-menu {
@@ -41,20 +42,21 @@ body {
     cursor: pointer;
     background-color: #ffffff;
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 20px;
     font-weight: bold;
-    color: #333;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    color: #4a4e50;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .user-icon:hover {
-    background-color: #e0e0e0;
     transform: scale(1.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .dropdown-menu {
@@ -63,18 +65,20 @@ body {
     right: 0;
     background-color: white;
     border: 1px solid #ddd;
-    border-radius: 4px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     display: none;
     z-index: 1000;
 }
 
 .dropdown-menu a {
     display: block;
-    padding: 10px 20px;
-    color: #333;
+    padding: 12px 20px;
+    color: #4a4e50;
     text-decoration: none;
     border-bottom: 1px solid #f0f0f0;
+    font-size: 16px;
+    transition: background-color 0.3s;
 }
 
 .dropdown-menu a:last-child {
@@ -82,7 +86,7 @@ body {
 }
 
 .dropdown-menu a:hover {
-    background-color: #f0f0f0;
+    background-color: #f5f7fa;
 }
 
 /* 貼文區樣式 */
@@ -93,30 +97,30 @@ body {
 }
 
 .post-card {
-    background-color: #fdfdfd;
+    background-color: #ffffff;
     padding: 15px;
     border: 1px solid #ddd;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .post-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
 .post-content {
     font-size: 1.1em;
-    line-height: 1.5;
+    line-height: 1.6;
     color: #333;
     margin-bottom: 10px;
 }
 
 .post-time {
     font-size: 0.9em;
-    color: #a0a9ac;
+    color: #7f8c8d;
 }
 
 .interaction-buttons {
@@ -125,57 +129,48 @@ body {
 
 .interaction-buttons button {
     margin-right: 10px;
-    background-color: #eeeeee;
-    color: #333;
-    padding: 5px 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.interaction-buttons button:hover {
-    background-color: #dddddd;
-}
-
-/* 登入提示模態框樣式 */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.modal-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
-    width: 300px;
-}
-
-.modal-content button {
-    margin: 10px;
-    padding: 10px 20px;
+    background-color: #eef3f8;
+    color: #4a4e50;
+    padding: 8px 16px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, box-shadow 0.3s;
 }
 
-.modal-content .login-btn {
-    background-color: #4da6ff;
+.interaction-buttons button:hover {
+    background-color: #dce6f0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 引導提示啟動按鈕樣式 */
+.guide-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: linear-gradient(to right, #4da6ff, #3385ff);
     color: white;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.modal-content .register-btn {
-    background-color: #cccccc;
-    color: #333;
+.guide-button:hover {
+    transform: scale(1.15);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+}
+
+.guide-button:active {
+    transform: scale(0.95);
 }
 
 /* 引導提示樣式 */
@@ -185,7 +180,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.6);
     z-index: 1000;
     display: none;
     justify-content: center;
@@ -195,67 +190,57 @@ body {
 .guide {
     background: white;
     padding: 20px;
-    border-radius: 8px;
+    border-radius: 12px;
     text-align: center;
     width: 90%;
     max-width: 400px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
     animation: fadeIn 0.3s ease-in-out;
 }
 
 .guide h2 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    color: #4a4e50;
 }
 
 .guide p {
     margin-bottom: 20px;
     font-size: 1rem;
-    color: #333;
+    color: #4a4e50;
 }
 
 .guide button {
     background-color: #4da6ff;
     color: white;
     border: none;
-    border-radius: 5px;
-    padding: 10px 15px;
+    border-radius: 8px;
+    padding: 12px 20px;
     cursor: pointer;
     font-size: 1rem;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .guide button:hover {
     background-color: #3385ff;
+    transform: translateY(-3px);
 }
 
 .guide button:active {
     transform: scale(0.95);
 }
 
-/* 引導提示啟動按鈕樣式 */
-.guide-button {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #4da6ff;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    font-size: 1rem;
-    cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.guide-button:hover {
-    background-color: #3385ff;
-}
-
-.guide-button:active {
-    transform: scale(0.95);
+/* 漸變效果 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 /* 響應式設計 */
@@ -273,6 +258,12 @@ body {
         width: 35px;
         height: 35px;
         font-size: 18px;
+    }
+
+    .guide-button {
+        width: 50px;
+        height: 50px;
+        font-size: 12px;
     }
 }
 
