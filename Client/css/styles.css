@@ -90,7 +90,6 @@ body {
     margin: 20px auto;
     width: 90%;
     max-width: 800px;
-    display: none; /* 預設主畫面貼文區隱藏 */
 }
 
 .post-card {
@@ -188,7 +187,7 @@ body {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.7);
     z-index: 1000;
-    display: none; /* 預設隱藏 */
+    display: none;
     justify-content: center;
     align-items: center;
 }
@@ -231,7 +230,7 @@ body {
 }
 
 .guide button:active {
-    transform: scale(0.95); /* 按下時縮小效果 */
+    transform: scale(0.95);
 }
 
 /* 引導提示啟動按鈕樣式 */
@@ -242,8 +241,9 @@ body {
     background-color: #4da6ff;
     color: white;
     border: none;
-    border-radius: 5px;
-    padding: 10px 15px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
     font-size: 1rem;
     cursor: pointer;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -262,7 +262,7 @@ body {
 @media screen and (max-width: 768px) {
     .guide {
         width: 90%;
-        font-size: 0.9rem; /* 調整引導提示文字大小 */
+        font-size: 0.9rem;
     }
 
     .post-card {
@@ -272,7 +272,9 @@ body {
     .user-icon {
         width: 35px;
         height: 35px;
-        font-size: 18px; /* 調整右上角圖示大小 */
+        font-size: 18px;
     }
 }
+
+
 
