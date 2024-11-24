@@ -99,44 +99,73 @@
             background-color: #dddddd;
         }
 
-        /* 登入提示模態框 */
-        .modal {
+        /* 引導提示樣式 */
+        .overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: none;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            display: none; /* 預設隱藏 */
             justify-content: center;
             align-items: center;
-            z-index: 1000;
         }
 
-        .modal-content {
-            background-color: white;
+        .guide {
+            background: white;
             padding: 20px;
             border-radius: 8px;
             text-align: center;
-            width: 300px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        .modal-content button {
-            margin: 10px;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
+        .guide h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
         }
 
-        .modal-content .login-btn {
+        .guide p {
+            margin-bottom: 20px;
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .guide button {
             background-color: #4da6ff;
             color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 1rem;
         }
 
-        .modal-content .register-btn {
-            background-color: #cccccc;
-            color: #333;
+        .guide button:hover {
+            background-color: #3385ff;
+        }
+
+        /* 引導提示啟動按鈕 */
+        .guide-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4da6ff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .guide-button:hover {
+            background-color: #3385ff;
         }
     </style>
 </head>
@@ -154,32 +183,37 @@
     </header>
 
     <main>
-        <div class="post-card">
-            <h3>這是第一篇貼文！</h3>
-            <p>2024-11-22</p>
-            <div class="interaction-buttons">
-                <button onclick="checkLogin('like')">👍 按讚</button>
-                <button onclick="checkLogin('comment')">💬 留言</button>
+        <div id="feedContainer">
+            <div class="post-card">
+                <h3>這是第一篇貼文！</h3>
+                <p>2024-11-22</p>
+                <div class="interaction-buttons">
+                    <button onclick="checkLogin('like')">👍 按讚</button>
+                    <button onclick="checkLogin('comment')">💬 留言</button>
+                </div>
             </div>
-        </div>
-        <div class="post-card">
-            <h3>這是第二篇貼文！</h3>
-            <p>2024-11-22</p>
-            <div class="interaction-buttons">
-                <button onclick="checkLogin('like')">👍 按讚</button>
-                <button onclick="checkLogin('comment')">💬 留言</button>
+            <div class="post-card">
+                <h3>這是第二篇貼文！</h3>
+                <p>2024-11-22</p>
+                <div class="interaction-buttons">
+                    <button onclick="checkLogin('like')">👍 按讚</button>
+                    <button onclick="checkLogin('comment')">💬 留言</button>
+                </div>
             </div>
         </div>
     </main>
 
-    <!-- 登入提示模態框 -->
-    <div class="modal" id="authModal">
-        <div class="modal-content">
-            <p id="modalMessage">請先登入或註冊以繼續操作</p>
-            <button class="login-btn" onclick="redirectToLogin()">登入</button>
-            <button class="register-btn" onclick="redirectToRegister()">註冊</button>
+    <!-- 引導提示 -->
+    <div class="overlay" id="overlay">
+        <div class="guide">
+            <h2>歡迎來到泡泡糖社交！</h2>
+            <p>點擊右上角的圓點以登入或註冊，開始使用我們的功能。</p>
+            <button onclick="closeGuide()">開始探索</button>
         </div>
     </div>
+
+    <!-- 引導提示啟動按鈕 -->
+    <button class="guide-button" id="guideButton" onclick="restartGuide()">?</button>
 
     <script>
         let isLoggedIn = false;
@@ -193,39 +227,23 @@
         // 點擊按讚或留言檢查登入狀態
         function checkLogin(action) {
             if (!isLoggedIn) {
-                const modalMessage = document.getElementById('modalMessage');
-                modalMessage.textContent = action === 'like' ? '請先登入以按讚' : '請先登入以留言';
-                showAuthModal();
+                alert(action === 'like' ? '請先登入以按讚' : '請先登入以留言');
             } else {
                 alert(action === 'like' ? '您已按讚！' : '留言成功！');
             }
         }
 
-        // 顯示登入提示模態框
-        function showAuthModal() {
-            const modal = document.getElementById('authModal');
-            modal.style.display = 'flex';
+        // 關閉引導提示
+        function closeGuide() {
+            const overlay = document.getElementById('overlay');
+            overlay.style.display = 'none';
         }
 
-        // 跳轉至登入頁面
-        function redirectToLogin() {
-            window.location.href = "login.html";
+        // 重新啟動引導提示
+        function restartGuide() {
+            const overlay = document.getElementById('overlay');
+            overlay.style.display = 'flex';
         }
-
-        // 跳轉至註冊頁面
-        function redirectToRegister() {
-            window.location.href = "register.html";
-        }
-
-        // 點擊頁面其他地方關閉下拉選單
-        window.addEventListener('click', function (e) {
-            const userMenu = document.querySelector('.user-menu');
-            const dropdownMenu = document.getElementById('dropdownMenu');
-
-            if (!userMenu.contains(e.target)) {
-                dropdownMenu.style.display = 'none';
-            }
-        });
     </script>
 </body>
 </html>
