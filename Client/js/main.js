@@ -13,7 +13,7 @@ const main = {
       // 顯示引導畫面
       const overlay = document.getElementById('overlay');
       if (overlay) {
-        overlay.style.display = 'flex'; // 顯示引導提示
+        overlay.style.display = 'flex';
       }
 
       // 記錄用戶已經看過引導
@@ -32,7 +32,7 @@ const main = {
     }
     const overlay = document.getElementById('overlay');
     if (overlay) {
-      overlay.style.display = 'none'; // 確保引導畫面被隱藏
+      overlay.style.display = 'none'; // 隱藏引導視窗
     }
   },
 
@@ -101,8 +101,6 @@ main.init();
 
 // 將處理函數公開給全局
 window.handleUserIconClick = main.handleUserIconClick;
-
-
 
 
 
