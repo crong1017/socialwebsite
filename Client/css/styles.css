@@ -14,25 +14,32 @@ body {
     min-height: 100vh;
 }
 
+/* 頁首樣式 */
 .header {
-    background-color: #a8bfc9;
-    color: #fdfdfd;
-    padding: 20px;
-    text-align: center;
-    border-bottom: 1px solid #cdd7db;
+    background-color: #98a8b8;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
     position: sticky;
     top: 0;
     z-index: 1000;
+    border-bottom: 1px solid #cdd7db;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 24px;
 }
 
 .user-menu {
-    position: absolute;
-    top: 20px;
-    right: 20px;
+    position: relative;
 }
 
 .user-icon {
-    background-color: #f0f0f0;
+    cursor: pointer;
+    background-color: #ffffff;
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -42,18 +49,47 @@ body {
     font-size: 20px;
     font-weight: bold;
     color: #333;
-    cursor: pointer;
-    position: relative;
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .user-icon:hover {
     background-color: #e0e0e0;
-    transform: scale(1.1); /* 懸浮放大效果 */
+    transform: scale(1.1);
 }
 
+.dropdown-menu {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: none;
+    z-index: 1000;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px 20px;
+    color: #333;
+    text-decoration: none;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.dropdown-menu a:last-child {
+    border-bottom: none;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f0f0f0;
+}
+
+/* 貼文區樣式 */
 .blog-container {
-    margin-top: 20px;
+    margin: 20px auto;
+    width: 90%;
+    max-width: 800px;
     display: none; /* 預設主畫面貼文區隱藏 */
 }
 
@@ -82,6 +118,65 @@ body {
 .post-time {
     font-size: 0.9em;
     color: #a0a9ac;
+}
+
+.interaction-buttons {
+    margin-top: 10px;
+}
+
+.interaction-buttons button {
+    margin-right: 10px;
+    background-color: #eeeeee;
+    color: #333;
+    padding: 5px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.interaction-buttons button:hover {
+    background-color: #dddddd;
+}
+
+/* 登入提示模態框樣式 */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 300px;
+}
+
+.modal-content button {
+    margin: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.modal-content .login-btn {
+    background-color: #4da6ff;
+    color: white;
+}
+
+.modal-content .register-btn {
+    background-color: #cccccc;
+    color: #333;
 }
 
 /* 引導提示樣式 */
@@ -139,16 +234,28 @@ body {
     transform: scale(0.95); /* 按下時縮小效果 */
 }
 
-/* 漸變效果 */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+/* 引導提示啟動按鈕樣式 */
+.guide-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #4da6ff;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.guide-button:hover {
+    background-color: #3385ff;
+}
+
+.guide-button:active {
+    transform: scale(0.95);
 }
 
 /* 響應式設計 */
