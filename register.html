@@ -3,82 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>登入或註冊 - 泡泡糖社交</title>
+    <title>註冊 - 泡泡糖社交</title>
     <link rel="stylesheet" href="Client/css/styles.css">
 </head>
 <body>
+    <!-- 頁首 -->
     <header class="header">
-        <h1 id="pageTitle">登入泡泡糖社交</h1>
+        <h1>註冊泡泡糖社交</h1>
     </header>
 
+    <!-- 註冊表單 -->
     <div class="auth-container">
-        <!-- 登入區 -->
-        <div id="loginSection">
-            <h2>登入</h2>
-            <input id="login-email" type="email" placeholder="Email" required>
-            <input id="login-password" type="password" placeholder="Password" required>
-            <button onclick="login()">登入</button>
-            <p>還沒有帳號？ <a href="javascript:void(0);" onclick="showRegister()">註冊</a></p>
-        </div>
-
-        <!-- 註冊區 -->
-        <div id="registerSection" style="display: none;">
-            <h2>註冊</h2>
-            <input id="register-email" type="email" placeholder="Email" required>
-            <input id="register-password" type="password" placeholder="Password" required>
-            <input id="register-confirm-password" type="password" placeholder="確認密碼" required>
-            <button onclick="register()">註冊</button>
-            <p>已有帳號？ <a href="javascript:void(0);" onclick="showLogin()">登入</a></p>
-        </div>
+        <h2>註冊</h2>
+        <input id="register-email" type="email" placeholder="Email" required>
+        <input id="register-password" type="password" placeholder="Password" required>
+        <input id="register-confirm-password" type="password" placeholder="確認密碼" required>
+        <button onclick="register()">註冊</button>
+        <p>已有帳號？ <a href="login.html">登入</a></p>
     </div>
 
     <script>
-        // 顯示登入區
-        function showLogin() {
-            document.getElementById('loginSection').style.display = 'block';
-            document.getElementById('registerSection').style.display = 'none';
-            document.getElementById('pageTitle').innerText = '登入泡泡糖社交';
-        }
-
-        // 顯示註冊區
-        function showRegister() {
-            document.getElementById('loginSection').style.display = 'none';
-            document.getElementById('registerSection').style.display = 'block';
-            document.getElementById('pageTitle').innerText = '註冊泡泡糖社交';
-        }
-
-        // 登入邏輯
-        async function login() {
-            const email = document.getElementById('login-email').value.trim();
-            const password = document.getElementById('login-password').value.trim();
-
-            if (!email || !password) {
-                alert('請輸入帳號與密碼！');
-                return;
-            }
-
-            try {
-                // 假設伺服器的 API 是 /api/login
-                const response = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    alert('登入成功！');
-                    localStorage.setItem('auth_token', result.token); // 儲存驗證 token
-                    window.location.href = "index.html"; // 跳轉至首頁
-                } else {
-                    alert(result.message || '登入失敗，請檢查您的帳號或密碼');
-                }
-            } catch (error) {
-                console.error('登入錯誤：', error);
-                alert('伺服器發生錯誤，請稍後再試');
-            }
-        }
-
         // 註冊邏輯
         async function register() {
             const email = document.getElementById('register-email').value.trim();
@@ -106,7 +50,7 @@
                 const result = await response.json();
                 if (result.success) {
                     alert('註冊成功！請登入');
-                    showLogin(); // 切換到登入區
+                    window.location.href = "login.html"; // 跳轉至登入頁面
                 } else {
                     alert(result.message || '註冊失敗，請稍後再試');
                 }
@@ -118,6 +62,3 @@
     </script>
 </body>
 </html>
-
-
-
