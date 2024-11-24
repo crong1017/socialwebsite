@@ -4,42 +4,231 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>泡泡糖社交</title>
-    <link rel="stylesheet" href="Client/css/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        .header {
+            background-color: #98a8b8;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .user-icon {
+            cursor: pointer;
+            background-color: #ffffff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 60px;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 10px 20px;
+            color: #333;
+            text-decoration: none;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .dropdown-menu a:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .post-card {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+        }
+
+        .interaction-buttons {
+            margin-top: 10px;
+        }
+
+        .interaction-buttons button {
+            margin-right: 10px;
+            background-color: #eeeeee;
+            color: #333;
+            padding: 5px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .interaction-buttons button:hover {
+            background-color: #dddddd;
+        }
+
+        /* 登入提示模態框 */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            width: 300px;
+        }
+
+        .modal-content button {
+            margin: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .modal-content .login-btn {
+            background-color: #4da6ff;
+            color: white;
+        }
+
+        .modal-content .register-btn {
+            background-color: #cccccc;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
     <header class="header">
-        <h1 class="gradient-text">泡泡糖社交</h1>
+        <h1>泡泡糖社交</h1>
         <div class="user-menu">
-            <div class="user-icon" id="userIcon" onclick="handleUserIconClick()">👤</div>
+            <div class="user-icon" onclick="toggleDropdown()">👤</div>
+            <div class="dropdown-menu" id="dropdownMenu">
+                <a href="home.html">個人主頁</a>
+                <a href="login.html">登入</a>
+                <a href="register.html">註冊</a>
+            </div>
         </div>
     </header>
 
-    <div class="container">
-        <!-- 貼文區 -->
-        <div id="feedContainer" class="blog-container">
-            <!-- 貼文將由 JavaScript 動態插入 -->
+    <main>
+        <div class="post-card">
+            <h3>這是第一篇貼文！</h3>
+            <p>2024-11-22</p>
+            <div class="interaction-buttons">
+                <button onclick="checkLogin('like')">👍 按讚</button>
+                <button onclick="checkLogin('comment')">💬 留言</button>
+            </div>
+        </div>
+        <div class="post-card">
+            <h3>這是第二篇貼文！</h3>
+            <p>2024-11-22</p>
+            <div class="interaction-buttons">
+                <button onclick="checkLogin('like')">👍 按讚</button>
+                <button onclick="checkLogin('comment')">💬 留言</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- 登入提示模態框 -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <p id="modalMessage">請先登入或註冊以繼續操作</p>
+            <button class="login-btn" onclick="redirectToLogin()">登入</button>
+            <button class="register-btn" onclick="redirectToRegister()">註冊</button>
         </div>
     </div>
 
-    <!-- 引導提示 -->
-    <div class="overlay" id="overlay">
-        <div class="guide">
-            <h2>歡迎來到泡泡糖社交！</h2>
-            <p>點擊右上角的圓點以登入或註冊，開始使用我們的功能。</p>
-            <p>您也可以瀏覽其他使用者的貼文，享受互動！</p>
-            <button onclick="closeGuide()">開始探索</button>
-        </div>
-    </div>
+    <script>
+        let isLoggedIn = false;
 
-    <footer class="footer">
-        <p>© 2024 泡泡糖社交 - All rights reserved.</p>
-    </footer>
+        // 切換右上角下拉選單
+        function toggleDropdown() {
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+        }
 
-    <script src="Client/js/main.js" type="module"></script>
+        // 點擊按讚或留言檢查登入狀態
+        function checkLogin(action) {
+            if (!isLoggedIn) {
+                const modalMessage = document.getElementById('modalMessage');
+                modalMessage.textContent = action === 'like' ? '請先登入以按讚' : '請先登入以留言';
+                showAuthModal();
+            } else {
+                alert(action === 'like' ? '您已按讚！' : '留言成功！');
+            }
+        }
+
+        // 顯示登入提示模態框
+        function showAuthModal() {
+            const modal = document.getElementById('authModal');
+            modal.style.display = 'flex';
+        }
+
+        // 跳轉至登入頁面
+        function redirectToLogin() {
+            window.location.href = "login.html";
+        }
+
+        // 跳轉至註冊頁面
+        function redirectToRegister() {
+            window.location.href = "register.html";
+        }
+
+        // 點擊頁面其他地方關閉下拉選單
+        window.addEventListener('click', function (e) {
+            const userMenu = document.querySelector('.user-menu');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+
+            if (!userMenu.contains(e.target)) {
+                dropdownMenu.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
-
-
 
 
 
