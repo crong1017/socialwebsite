@@ -5,6 +5,113 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>泡泡糖社交</title>
     <link rel="stylesheet" href="Client/css/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #98a8b8;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .user-icon {
+            cursor: pointer;
+            background-color: #f0f0f0;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 60px;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .blog-container {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .post-card {
+            background: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .interaction-buttons button {
+            margin-right: 10px;
+            background-color: #eeeeee;
+            border: none;
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .post-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .post-section input,
+        .post-section textarea {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .post-section button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <!-- 頁首 -->
@@ -20,40 +127,21 @@
         </div>
     </header>
 
-    <!-- 貼文區 -->
-    <main class="blog-container" id="feedContainer">
-        <div class="post-card">
-            <h3>這是第一篇貼文！</h3>
-            <p>2024-11-22</p>
-            <div class="interaction-buttons">
-                <button onclick="checkLogin('like')">👍 按讚</button>
-                <button onclick="checkLogin('comment')">💬 留言</button>
-            </div>
-        </div>
-        <div class="post-card">
-            <h3>這是第二篇貼文！</h3>
-            <p>2024-11-22</p>
-            <div class="interaction-buttons">
-                <button onclick="checkLogin('like')">👍 按讚</button>
-                <button onclick="checkLogin('comment')">💬 留言</button>
-            </div>
-        </div>
-    </main>
-
-    <!-- 引導提示 -->
-    <div class="overlay" id="overlay">
-        <div class="guide">
-            <h2>歡迎來到泡泡糖社交！</h2>
-            <p>點擊右上角的圓點以登入或註冊，開始使用我們的功能。</p>
-            <button onclick="closeGuide()">開始探索</button>
-        </div>
+    <!-- 發文區 -->
+    <div class="post-section">
+        <h2>發表貼文</h2>
+        <input id="postTitle" type="text" placeholder="貼文標題">
+        <textarea id="postContent" rows="4" placeholder="貼文內容"></textarea>
+        <button onclick="addPost()">發表貼文</button>
     </div>
 
-    <!-- 引導提示啟動按鈕 -->
-    <button class="guide-button" id="guideButton" onclick="restartGuide()">操作說明</button>
+    <!-- 貼文區 -->
+    <main class="blog-container" id="feedContainer">
+        <!-- 動態貼文會插入到這裡 -->
+    </main>
 
     <script>
-        let isLoggedIn = false;
+        let posts = [];
 
         // 切換右上角下拉選單
         function toggleDropdown() {
@@ -61,42 +149,58 @@
             dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
         }
 
-        // 點擊按讚或留言檢查登入狀態
-        function checkLogin(action) {
-            if (!isLoggedIn) {
-                alert(action === 'like' ? '請先登入以按讚' : '請先登入以留言');
-            } else {
-                alert(action === 'like' ? '您已按讚！' : '留言成功！');
+        // 新增貼文
+        function addPost() {
+            const postTitle = document.getElementById('postTitle').value;
+            const postContent = document.getElementById('postContent').value;
+
+            if (!postTitle || !postContent) {
+                alert('請填寫所有欄位！');
+                return;
             }
+
+            // 新增到本地陣列（模擬伺服器儲存）
+            const newPost = {
+                title: postTitle,
+                content: postContent,
+                date: new Date().toISOString(),
+            };
+            posts.push(newPost);
+
+            // 清空輸入欄位
+            document.getElementById('postTitle').value = '';
+            document.getElementById('postContent').value = '';
+
+            // 更新 UI
+            renderPosts();
         }
 
-        // 關閉引導提示
-        function closeGuide() {
-            const overlay = document.getElementById('overlay');
-            overlay.style.display = 'none';
+        // 渲染貼文
+        function renderPosts() {
+            const feedContainer = document.getElementById('feedContainer');
+            feedContainer.innerHTML = ''; // 清空容器
+
+            posts.forEach(post => {
+                const postCard = document.createElement('div');
+                postCard.className = 'post-card';
+                postCard.innerHTML = `
+                    <h3>${post.title}</h3>
+                    <p>${post.content}</p>
+                    <small>${new Date(post.date).toLocaleString()}</small>
+                    <div class="interaction-buttons">
+                        <button onclick="checkLogin('like')">👍 按讚</button>
+                        <button onclick="checkLogin('comment')">💬 留言</button>
+                    </div>
+                `;
+                feedContainer.appendChild(postCard);
+            });
         }
 
-        // 重新啟動引導提示
-        function restartGuide() {
-            const overlay = document.getElementById('overlay');
-            overlay.style.display = 'flex';
-        }
-
-        // 點擊頁面其他地方關閉下拉選單
-        window.addEventListener('click', function (e) {
-            const userMenu = document.querySelector('.user-menu');
-            const dropdownMenu = document.getElementById('dropdownMenu');
-            if (!userMenu.contains(e.target)) {
-                dropdownMenu.style.display = 'none';
-            }
-        });
+        // 初始化頁面時渲染預設貼文
+        document.addEventListener('DOMContentLoaded', renderPosts);
     </script>
 </body>
 </html>
-
-
-
-
 
 
 
