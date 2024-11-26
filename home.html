@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>泡泡糖社交</title>
+    <title>泡泡糖社交 - 個人主頁</title>
     <link rel="stylesheet" href="Client/css/styles.css">
     <style>
         body {
@@ -64,14 +64,23 @@
 
         .container {
             display: flex;
+            flex-direction: column;
             padding: 20px;
-            max-width: 1200px;
+            max-width: 800px;
             margin: 0 auto;
         }
 
-        .main-content {
-            flex: 3;
-            margin-right: 20px;
+        .profile-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-section h2 {
+            margin-top: 0;
+            color: #333;
         }
 
         .post-form {
@@ -105,43 +114,12 @@
             border: 1px solid #ddd;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-
-        .side-content {
-            flex: 1;
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .side-content h3 {
-            margin-top: 0;
-            color: #333;
-        }
-
-        .side-content ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .side-content ul li {
-            margin-bottom: 10px;
-        }
-
-        .side-content ul li a {
-            text-decoration: none;
-            color: #007bff;
-        }
-
-        .side-content ul li a:hover {
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
     <!-- 頁首 -->
     <header class="header">
-        <h1>泡泡糖社交</h1>
+        <h1>泡泡糖社交 - 個人主頁</h1>
         <div class="user-menu">
             <div class="user-icon" onclick="toggleDropdown()">👤</div>
             <div class="dropdown-menu" id="dropdownMenu">
@@ -155,27 +133,24 @@
 
     <!-- 主內容 -->
     <div class="container">
+        <!-- 個人檔案 -->
+        <section class="profile-section">
+            <h2>個人檔案</h2>
+            <p>使用者名稱：<strong>用戶A</strong></p>
+            <p>個性化介紹：喜歡分享日常，熱愛學習與探索新事物！</p>
+        </section>
+
         <!-- 發文區 -->
-        <main class="main-content">
-            <div class="post-form">
-                <h3>新增貼文</h3>
-                <textarea id="newPostContent" rows="3" placeholder="寫點什麼..."></textarea>
-                <button onclick="addPost()">發佈</button>
-            </div>
+        <div class="post-form">
+            <h3>新增貼文</h3>
+            <textarea id="newPostContent" rows="3" placeholder="寫點什麼..."></textarea>
+            <button onclick="addPost()">發佈</button>
+        </div>
 
-            <!-- 貼文列表 -->
-            <div id="feedContainer">
-                <!-- 動態生成貼文 -->
-            </div>
-        </main>
-
-        <!-- 右側欄位 -->
-        <aside class="side-content">
-            <h3>其他文章</h3>
-            <ul id="otherPosts">
-                <!-- 動態生成其他文章 -->
-            </ul>
-        </aside>
+        <!-- 貼文列表 -->
+        <div id="feedContainer">
+            <!-- 動態生成貼文 -->
+        </div>
     </div>
 
     <script>
@@ -194,25 +169,15 @@
                 const posts = await response.json();
 
                 const feedContainer = document.querySelector('#feedContainer');
-                const otherPosts = document.querySelector('#otherPosts');
                 feedContainer.innerHTML = '';
-                otherPosts.innerHTML = '';
 
-                posts.forEach((post, index) => {
-                    // 渲染主區域貼文
+                posts.forEach(post => {
                     const postCard = `
                         <div class="post-card">
-                            <h3>${post.title}</h3>
                             <p>${post.content}</p>
                             <small>${new Date(post.date).toLocaleString()}</small>
                         </div>`;
                     feedContainer.innerHTML += postCard;
-
-                    // 渲染右側其他文章
-                    if (index < 4) {
-                        const otherPostItem = `<li><a href="#">${post.title}</a></li>`;
-                        otherPosts.innerHTML += otherPostItem;
-                    }
                 });
             } catch (error) {
                 console.error('無法載入貼文:', error);
@@ -252,3 +217,4 @@
     </script>
 </body>
 </html>
+
