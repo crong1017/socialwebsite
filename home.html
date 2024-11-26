@@ -10,46 +10,16 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f9f9f9;
+            background-color: #f4f4f4;
         }
 
         .header {
-            background-color: #98a8b8;
+            background-color: #6c8ba4; /* 主題淺藍色 */
             color: white;
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
-        }
-
-        .header h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-
-        .search-bar {
-            display: flex;
-            align-items: center;
-            width: 40%;
-            max-width: 400px;
-            border-radius: 8px;
-            padding: 5px;
-            background-color: white;
-        }
-
-        .search-bar input {
-            border: none;
-            flex-grow: 1;
-            padding: 5px;
-            outline: none;
-        }
-
-        .search-bar button {
-            border: none;
-            background-color: transparent;
-            cursor: pointer;
-            font-size: 16px;
-            color: #333;
         }
 
         .user-menu {
@@ -58,7 +28,7 @@
 
         .user-icon {
             cursor: pointer;
-            background-color: #f0f0f0;
+            background-color: #d9d9d9; /* 灰白色 */
             border-radius: 50%;
             width: 40px;
             height: 40px;
@@ -79,85 +49,47 @@
             border-radius: 4px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             display: none;
-            z-index: 1000;
-            width: 200px;
         }
 
         .dropdown-menu a {
             display: block;
             padding: 10px 20px;
-            color: #333;
             text-decoration: none;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .dropdown-menu a:last-child {
-            border-bottom: none;
+            color: #333;
         }
 
         .dropdown-menu a:hover {
             background-color: #f0f0f0;
         }
 
-        .container {
-            display: flex;
-            margin: 20px auto;
-            width: 90%;
-            max-width: 1200px;
-        }
-
-        .main-content {
-            flex: 3;
-            margin-right: 20px;
-            background: white;
+        .blog-container {
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .side-content {
-            flex: 1;
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .post-section textarea, .post-section button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 4px;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         .post-card {
-            background: #f9f9f9;
+            background: white;
             padding: 15px;
             margin-bottom: 15px;
             border-radius: 5px;
             border: 1px solid #ddd;
         }
 
-        .interaction-buttons {
-            margin-top: 10px;
-        }
-
         .interaction-buttons button {
-            margin-right: 5px;
+            margin-right: 10px;
             background-color: #eeeeee;
-            color: #333;
-            padding: 5px 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            border: none;
+            padding: 8px 15px;
             cursor: pointer;
+            border-radius: 4px;
         }
 
         .interaction-buttons button:hover {
-            background-color: #dddddd;
+            background-color: #cccccc;
         }
 
-        /* 提示彈窗 */
-        #login-popup {
+        .overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -170,7 +102,7 @@
             z-index: 1000;
         }
 
-        #login-popup .popup-content {
+        .login-popup {
             background: white;
             padding: 20px;
             border-radius: 8px;
@@ -178,94 +110,100 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        #login-popup button {
+        .login-popup button {
             margin: 10px;
             padding: 10px 20px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            font-size: 16px;
         }
 
-        #login-popup .register {
-            background-color: #98a8b8; /* 淺藍色 */
+        .login-popup .register {
+            background-color: #5b9bd5; /* 註冊按鈕淺藍色 */
             color: white;
         }
 
-        #login-popup .login {
-            background-color: #5c6d7e; /* 深灰藍色 */
+        .login-popup .login {
+            background-color: #2d82c7; /* 登入按鈕深藍色 */
+            color: white;
+        }
+
+        .login-popup .close {
+            background-color: #d9534f; /* 關閉按鈕紅色 */
             color: white;
         }
     </style>
 </head>
 <body>
+    <!-- 頁首 -->
     <header class="header">
         <h1>泡泡糖社交</h1>
-        <div class="search-bar">
-            <input type="text" placeholder="搜尋貼文...">
-            <button onclick="searchPosts()">🔍</button>
-        </div>
         <div class="user-menu">
             <div class="user-icon" onclick="toggleDropdown()">👤</div>
             <div class="dropdown-menu" id="dropdownMenu">
-                <a href="index.html">主頁</a>
+                <a href="home.html">個人主頁</a>
                 <a href="login.html">登入</a>
                 <a href="register.html">註冊</a>
             </div>
         </div>
     </header>
 
-    <div class="container">
-        <div class="main-content">
-            <div class="post-section">
-                <h2>創建新貼文</h2>
-                <textarea id="post-content" placeholder="你在想什麼？" rows="3"></textarea>
-                <button onclick="checkLoginBeforePost()">發表貼文</button>
-            </div>
-            <div id="feedContainer">
-                <!-- 貼文區 -->
+    <!-- 貼文區 -->
+    <main class="blog-container" id="feedContainer">
+        <div class="post-card">
+            <h3>這是第一篇貼文！</h3>
+            <p>2024-11-22</p>
+            <div class="interaction-buttons">
+                <button onclick="checkLogin('like')">👍 按讚</button>
+                <button onclick="checkLogin('comment')">💬 留言</button>
             </div>
         </div>
+    </main>
 
-        <div class="side-content">
-            <h3>其他貼文</h3>
-        </div>
-    </div>
-
-    <!-- 彈窗提示 -->
-    <div id="login-popup">
-        <div class="popup-content" onclick="event.stopPropagation()">
-            <p>您需要先註冊或登入才能繼續！</p>
-            <button class="register" onclick="window.location.href='register.html'">註冊</button>
+    <!-- 登入詢問視窗 -->
+    <div class="overlay" id="loginOverlay" onclick="closePopup()">
+        <div class="login-popup" onclick="event.stopPropagation()">
+            <p>您需要先登入或註冊才能執行此操作！</p>
             <button class="login" onclick="window.location.href='login.html'">登入</button>
+            <button class="register" onclick="window.location.href='register.html'">註冊</button>
         </div>
     </div>
 
     <script>
+        let isLoggedIn = false;
+
+        // 切換右上角下拉選單
         function toggleDropdown() {
             const dropdownMenu = document.getElementById('dropdownMenu');
             dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
         }
 
-        function checkLoginBeforePost() {
-            // 模擬是否已登入
-            const isLoggedIn = false; // 修改這裡為 true 模擬登入狀態
-
+        // 點擊按讚或留言檢查登入狀態
+        function checkLogin(action) {
             if (!isLoggedIn) {
-                document.getElementById('login-popup').style.display = 'flex';
+                showPopup();
             } else {
-                alert("發表貼文成功！");
+                alert(action === 'like' ? '您已按讚！' : '留言成功！');
             }
         }
 
-        // 點擊空白區域關閉彈窗
-        document.getElementById('login-popup').addEventListener('click', function () {
-            this.style.display = 'none';
-        });
+        // 顯示登入詢問視窗
+        function showPopup() {
+            const loginOverlay = document.getElementById('loginOverlay');
+            loginOverlay.style.display = 'flex';
+        }
 
+        // 關閉登入詢問視窗
+        function closePopup() {
+            const loginOverlay = document.getElementById('loginOverlay');
+            loginOverlay.style.display = 'none';
+        }
+
+        // 點擊頁面其他地方關閉下拉選單
         window.addEventListener('click', function (e) {
             const userMenu = document.querySelector('.user-menu');
             const dropdownMenu = document.getElementById('dropdownMenu');
-
             if (!userMenu.contains(e.target)) {
                 dropdownMenu.style.display = 'none';
             }
