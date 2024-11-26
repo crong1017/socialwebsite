@@ -10,10 +10,11 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            background-color: #f4f4f4;
         }
 
         .header {
-            background-color: #98a8b8;
+            background-color: #6c8ba4; /* 主題淺藍色 */
             color: white;
             padding: 15px 20px;
             display: flex;
@@ -27,7 +28,7 @@
 
         .user-icon {
             cursor: pointer;
-            background-color: #f0f0f0;
+            background-color: #d9d9d9; /* 灰白色 */
             border-radius: 50%;
             width: 40px;
             height: 40px;
@@ -61,14 +62,28 @@
             background-color: #f0f0f0;
         }
 
-        .blog-container {
+        .container {
+            display: flex;
             padding: 20px;
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
+        .main-content {
+            flex: 3;
+            margin-right: 20px;
+        }
+
+        .side-content {
+            flex: 1;
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
         .post-card {
-            background: #f9f9f9;
+            background: white;
             padding: 15px;
             margin-bottom: 15px;
             border-radius: 5px;
@@ -84,32 +99,71 @@
             border-radius: 4px;
         }
 
-        .post-section {
-            margin-bottom: 30px;
-            padding: 20px;
-            background: #f4f4f4;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+        .interaction-buttons button:hover {
+            background-color: #cccccc;
         }
 
-        .post-section input,
-        .post-section textarea {
-            display: block;
-            width: 100%;
+        .side-content h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .side-content ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .side-content ul li {
             margin-bottom: 10px;
-            padding: 10px;
-            font-size: 14px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
         }
 
-        .post-section button {
-            background-color: #007bff;
-            color: white;
+        .side-content ul li a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .side-content ul li a:hover {
+            text-decoration: underline;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .login-popup {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-popup button {
+            margin: 10px;
             padding: 10px 20px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            font-size: 16px;
+        }
+
+        .login-popup .register {
+            background-color: #5b9bd5; /* 註冊按鈕淺藍色 */
+            color: white;
+        }
+
+        .login-popup .login {
+            background-color: #2d82c7; /* 登入按鈕深藍色 */
+            color: white;
         }
     </style>
 </head>
@@ -127,21 +181,43 @@
         </div>
     </header>
 
-    <!-- 發文區 -->
-    <div class="post-section">
-        <h2>發表貼文</h2>
-        <input id="postTitle" type="text" placeholder="貼文標題">
-        <textarea id="postContent" rows="4" placeholder="貼文內容"></textarea>
-        <button onclick="addPost()">發表貼文</button>
+    <!-- 主內容 -->
+    <div class="container">
+        <!-- 貼文區 -->
+        <main class="main-content" id="feedContainer">
+            <div class="post-card">
+                <h3>這是第一篇貼文！</h3>
+                <p>2024-11-22</p>
+                <div class="interaction-buttons">
+                    <button onclick="checkLogin('like')">👍 按讚</button>
+                    <button onclick="checkLogin('comment')">💬 留言</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- 右側欄位 -->
+        <aside class="side-content">
+            <h3>其他文章</h3>
+            <ul>
+                <li><a href="#">文章 1</a></li>
+                <li><a href="#">文章 2</a></li>
+                <li><a href="#">文章 3</a></li>
+                <li><a href="#">文章 4</a></li>
+            </ul>
+        </aside>
     </div>
 
-    <!-- 貼文區 -->
-    <main class="blog-container" id="feedContainer">
-        <!-- 動態貼文會插入到這裡 -->
-    </main>
+    <!-- 登入詢問視窗 -->
+    <div class="overlay" id="loginOverlay" onclick="closePopup()">
+        <div class="login-popup" onclick="event.stopPropagation()">
+            <p>您需要先登入或註冊才能執行此操作！</p>
+            <button class="login" onclick="window.location.href='login.html'">登入</button>
+            <button class="register" onclick="window.location.href='register.html'">註冊</button>
+        </div>
+    </div>
 
     <script>
-        let posts = [];
+        let isLoggedIn = false;
 
         // 切換右上角下拉選單
         function toggleDropdown() {
@@ -149,58 +225,36 @@
             dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
         }
 
-        // 新增貼文
-        function addPost() {
-            const postTitle = document.getElementById('postTitle').value;
-            const postContent = document.getElementById('postContent').value;
-
-            if (!postTitle || !postContent) {
-                alert('請填寫所有欄位！');
-                return;
+        // 點擊按讚或留言檢查登入狀態
+        function checkLogin(action) {
+            if (!isLoggedIn) {
+                showPopup();
+            } else {
+                alert(action === 'like' ? '您已按讚！' : '留言成功！');
             }
-
-            // 新增到本地陣列（模擬伺服器儲存）
-            const newPost = {
-                title: postTitle,
-                content: postContent,
-                date: new Date().toISOString(),
-            };
-            posts.push(newPost);
-
-            // 清空輸入欄位
-            document.getElementById('postTitle').value = '';
-            document.getElementById('postContent').value = '';
-
-            // 更新 UI
-            renderPosts();
         }
 
-        // 渲染貼文
-        function renderPosts() {
-            const feedContainer = document.getElementById('feedContainer');
-            feedContainer.innerHTML = ''; // 清空容器
-
-            posts.forEach(post => {
-                const postCard = document.createElement('div');
-                postCard.className = 'post-card';
-                postCard.innerHTML = `
-                    <h3>${post.title}</h3>
-                    <p>${post.content}</p>
-                    <small>${new Date(post.date).toLocaleString()}</small>
-                    <div class="interaction-buttons">
-                        <button onclick="checkLogin('like')">👍 按讚</button>
-                        <button onclick="checkLogin('comment')">💬 留言</button>
-                    </div>
-                `;
-                feedContainer.appendChild(postCard);
-            });
+        // 顯示登入詢問視窗
+        function showPopup() {
+            const loginOverlay = document.getElementById('loginOverlay');
+            loginOverlay.style.display = 'flex';
         }
 
-        // 初始化頁面時渲染預設貼文
-        document.addEventListener('DOMContentLoaded', renderPosts);
+        // 關閉登入詢問視窗
+        function closePopup() {
+            const loginOverlay = document.getElementById('loginOverlay');
+            loginOverlay.style.display = 'none';
+        }
+
+        // 點擊頁面其他地方關閉下拉選單
+        window.addEventListener('click', function (e) {
+            const userMenu = document.querySelector('.user-menu');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            if (!userMenu.contains(e.target)) {
+                dropdownMenu.style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>
-
-
 
