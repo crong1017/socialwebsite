@@ -187,17 +187,12 @@
         }
 
         #login-popup .register {
-            background-color: #007bff;
+            background-color: #98a8b8; /* 淺藍色 */
             color: white;
         }
 
         #login-popup .login {
-            background-color: #28a745;
-            color: white;
-        }
-
-        #login-popup .close {
-            background-color: red;
+            background-color: #5c6d7e; /* 深灰藍色 */
             color: white;
         }
     </style>
@@ -238,11 +233,10 @@
 
     <!-- 彈窗提示 -->
     <div id="login-popup">
-        <div class="popup-content">
+        <div class="popup-content" onclick="event.stopPropagation()">
             <p>您需要先註冊或登入才能繼續！</p>
             <button class="register" onclick="window.location.href='register.html'">註冊</button>
             <button class="login" onclick="window.location.href='login.html'">登入</button>
-            <button class="close" onclick="closePopup()">關閉</button>
         </div>
     </div>
 
@@ -263,9 +257,10 @@
             }
         }
 
-        function closePopup() {
-            document.getElementById('login-popup').style.display = 'none';
-        }
+        // 點擊空白區域關閉彈窗
+        document.getElementById('login-popup').addEventListener('click', function () {
+            this.style.display = 'none';
+        });
 
         window.addEventListener('click', function (e) {
             const userMenu = document.querySelector('.user-menu');
@@ -278,4 +273,3 @@
     </script>
 </body>
 </html>
-
