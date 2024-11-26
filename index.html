@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>泡泡糖社交</title>
-    <link rel="stylesheet" href="Client/css/styles.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -28,7 +27,7 @@
 
         .user-icon {
             cursor: pointer;
-            background-color: #d9d9d9; /* 灰白色 */
+            background-color: #d9d9d9;
             border-radius: 50%;
             width: 40px;
             height: 40px;
@@ -38,28 +37,6 @@
             font-size: 20px;
             font-weight: bold;
             color: #333;
-        }
-
-        .dropdown-menu {
-            position: absolute;
-            top: 60px;
-            right: 0;
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            display: none;
-        }
-
-        .dropdown-menu a {
-            display: block;
-            padding: 10px 20px;
-            text-decoration: none;
-            color: #333;
-        }
-
-        .dropdown-menu a:hover {
-            background-color: #f0f0f0;
         }
 
         .container {
@@ -82,17 +59,41 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
+        .post-form {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-form textarea, .post-form button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        .post-form button {
+            background-color: #6c8ba4;
+            color: white;
+            cursor: pointer;
+        }
+
         .post-card {
             background: white;
             padding: 15px;
             margin-bottom: 15px;
             border-radius: 5px;
             border: 1px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .interaction-buttons button {
             margin-right: 10px;
-            background-color: #eeeeee;
+            background-color: #6c8ba4;
+            color: white;
             border: none;
             padding: 8px 15px;
             cursor: pointer;
@@ -100,30 +101,7 @@
         }
 
         .interaction-buttons button:hover {
-            background-color: #cccccc;
-        }
-
-        .side-content h3 {
-            margin-top: 0;
-            color: #333;
-        }
-
-        .side-content ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .side-content ul li {
-            margin-bottom: 10px;
-        }
-
-        .side-content ul li a {
-            text-decoration: none;
-            color: #007bff;
-        }
-
-        .side-content ul li a:hover {
-            text-decoration: underline;
+            background-color: #5a728a;
         }
 
         .overlay {
@@ -139,7 +117,7 @@
             z-index: 1000;
         }
 
-        .login-popup {
+        .popup {
             background: white;
             padding: 20px;
             border-radius: 8px;
@@ -147,7 +125,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        .login-popup button {
+        .popup button {
             margin: 10px;
             padding: 10px 20px;
             border: none;
@@ -156,13 +134,13 @@
             font-size: 16px;
         }
 
-        .login-popup .register {
-            background-color: #5b9bd5; /* 註冊按鈕淺藍色 */
+        .popup .login {
+            background-color: #2d82c7;
             color: white;
         }
 
-        .login-popup .login {
-            background-color: #2d82c7; /* 登入按鈕深藍色 */
+        .popup .register {
+            background-color: #5b9bd5;
             color: white;
         }
     </style>
@@ -173,43 +151,37 @@
         <h1>泡泡糖社交</h1>
         <div class="user-menu">
             <div class="user-icon" onclick="toggleDropdown()">👤</div>
-            <div class="dropdown-menu" id="dropdownMenu">
+             <div class="dropdown-menu" id="dropdownMenu">
                 <a href="home.html">個人主頁</a>
                 <a href="login.html">登入</a>
                 <a href="register.html">註冊</a>
-            </div>
+
         </div>
     </header>
 
     <!-- 主內容 -->
     <div class="container">
-        <!-- 貼文區 -->
-        <main class="main-content" id="feedContainer">
-            <div class="post-card">
-                <h3>這是第一篇貼文！</h3>
-                <p>2024-11-22</p>
-                <div class="interaction-buttons">
-                    <button onclick="checkLogin('like')">👍 按讚</button>
-                    <button onclick="checkLogin('comment')">💬 留言</button>
-                </div>
+        <!-- 發文區 -->
+        <main class="main-content">
+            <div class="post-form">
+                <textarea id="newPostContent" rows="3" placeholder="寫點什麼..."></textarea>
+                <button onclick="addPost()">發佈</button>
             </div>
+
+            <!-- 動態貼文 -->
+            <div id="feedContainer"></div>
         </main>
 
         <!-- 右側欄位 -->
         <aside class="side-content">
             <h3>其他文章</h3>
-            <ul>
-                <li><a href="#">文章 1</a></li>
-                <li><a href="#">文章 2</a></li>
-                <li><a href="#">文章 3</a></li>
-                <li><a href="#">文章 4</a></li>
-            </ul>
+            <ul id="otherPosts"></ul>
         </aside>
     </div>
 
     <!-- 登入詢問視窗 -->
-    <div class="overlay" id="loginOverlay" onclick="closePopup()">
-        <div class="login-popup" onclick="event.stopPropagation()">
+    <div class="overlay" id="loginOverlay">
+        <div class="popup">
             <p>您需要先登入或註冊才能執行此操作！</p>
             <button class="login" onclick="window.location.href='login.html'">登入</button>
             <button class="register" onclick="window.location.href='register.html'">註冊</button>
@@ -217,22 +189,88 @@
     </div>
 
     <script>
-        let isLoggedIn = false;
+        let isLoggedIn = false; // 用於模擬登入狀態
+        const apiUrl = 'http://localhost:3000'; // 假設後端 API 地址
 
-        // 切換右上角下拉選單
-        function toggleDropdown() {
-            const dropdownMenu = document.getElementById('dropdownMenu');
-            dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+        // 顯示彈出視窗
+        function showPopup() {
+            document.getElementById('loginOverlay').style.display = 'flex';
         }
 
-        // 點擊按讚或留言檢查登入狀態
-        function checkLogin(action) {
+        // 關閉彈出視窗
+        function closePopup() {
+            document.getElementById('loginOverlay').style.display = 'none';
+        }
+
+        // 發佈貼文
+        async function addPost() {
             if (!isLoggedIn) {
                 showPopup();
-            } else {
-                alert(action === 'like' ? '您已按讚！' : '留言成功！');
+                return;
+            }
+
+            const content = document.getElementById('newPostContent').value;
+            if (!content.trim()) {
+                alert('請輸入內容');
+                return;
+            }
+
+            const post = { content, date: new Date().toISOString() };
+
+            try {
+                const response = await fetch(`${apiUrl}/posts`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(post)
+                });
+
+                if (response.ok) {
+                    document.getElementById('newPostContent').value = '';
+                    await renderPosts();
+                } else {
+                    alert('發佈失敗');
+                }
+            } catch (error) {
+                console.error('發佈貼文失敗:', error);
             }
         }
+
+        // 渲染貼文
+        async function renderPosts() {
+            try {
+                const response = await fetch(`${apiUrl}/posts`);
+                const posts = await response.json();
+
+                const feedContainer = document.getElementById('feedContainer');
+                const otherPosts = document.getElementById('otherPosts');
+
+                feedContainer.innerHTML = '';
+                otherPosts.innerHTML = '';
+
+                posts.forEach((post, index) => {
+                    feedContainer.innerHTML += `
+                        <div class="post-card">
+                            <p>${post.content}</p>
+                            <small>${new Date(post.date).toLocaleString()}</small>
+                            <div class="interaction-buttons">
+                                <button onclick="showPopup()">👍 按讚</button>
+                                <button onclick="showPopup()">💬 留言</button>
+                            </div>
+                        </div>
+                    `;
+
+                    if (index < 4) {
+                        otherPosts.innerHTML += `<li><a href="#">${post.content}</a></li>`;
+                    }
+                });
+            } catch (error) {
+                console.error('載入貼文失敗:', error);
+            }
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', renderPosts);
+
 
         // 顯示登入詢問視窗
         function showPopup() {
