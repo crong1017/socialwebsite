@@ -103,6 +103,48 @@ app.post('/login', async (req, res) => {
   }
 });
 
+// 按讚功能
+app.post('/posts/:postId/like', authenticateToken, async (req, res) => {
+  const postId = req.params.postId;
+  const userId = req.user.userId; // 從 JWT 中獲取用戶 ID
+
+  try {
+    // 檢查用戶是否已經對該貼文按過讚
+    const [likeExists] = await dbPromise.execute('SELECT * FROM likes WHERE user_id = ? AND post_id = ?', [userId, postId]);
+    
+    if (likeExists.length > 0) {
+      return res.status(400).send({ message: 'You have already liked this post' });
+    }
+
+    // 插入新的按讚記錄
+    await dbPromise.execute('INSERT INTO likes (user_id, post_id) VALUES (?, ?)', [userId, postId]);
+    res.status(201).send({ message: 'Post liked successfully' });
+  } catch (error) {
+    console.error('Error liking post:', error);
+    res.status(500).send({ message: 'Error liking post' });
+  }
+});
+
+// 留言功能
+app.post('/posts/:postId/comment', authenticateToken, async (req, res) => {
+  const postId = req.params.postId;
+  const userId = req.user.userId; // 從 JWT 中獲取用戶 ID
+  const { content } = req.body;
+
+  if (!content) {
+    return res.status(400).send({ message: 'Content is required' });
+  }
+
+  try {
+    // 儲存留言資料
+    await dbPromise.execute('INSERT INTO comments (user_id, post_id, content) VALUES (?, ?, ?)', [userId, postId, content]);
+    res.status(201).send({ message: 'Comment added successfully' });
+  } catch (error) {
+    console.error('Error creating comment:', error);
+    res.status(500).send({ message: 'Error creating comment' });
+  }
+});
+
 // 全局錯誤處理
 app.use((err, req, res, next) => {
   console.error('未捕获的錯誤:', err.message);
