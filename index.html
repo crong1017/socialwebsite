@@ -39,6 +39,28 @@
             color: #333;
         }
 
+        .dropdown-menu {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #f0f0f0;
+        }
+
         .container {
             display: flex;
             padding: 20px;
@@ -151,11 +173,11 @@
         <h1>泡泡糖社交</h1>
         <div class="user-menu">
             <div class="user-icon" onclick="toggleDropdown()">👤</div>
-             <div class="dropdown-menu" id="dropdownMenu">
+            <div class="dropdown-menu" id="dropdownMenu">
                 <a href="home.html">個人主頁</a>
                 <a href="login.html">登入</a>
                 <a href="register.html">註冊</a>
-
+            </div>
         </div>
     </header>
 
@@ -180,8 +202,8 @@
     </div>
 
     <!-- 登入詢問視窗 -->
-    <div class="overlay" id="loginOverlay">
-        <div class="popup">
+    <div class="overlay" id="loginOverlay" onclick="closePopup()">
+        <div class="popup" onclick="event.stopPropagation()">
             <p>您需要先登入或註冊才能執行此操作！</p>
             <button class="login" onclick="window.location.href='login.html'">登入</button>
             <button class="register" onclick="window.location.href='register.html'">註冊</button>
@@ -189,20 +211,24 @@
     </div>
 
     <script>
-        let isLoggedIn = false; // 用於模擬登入狀態
-        const apiUrl = 'http://localhost:3000'; // 假設後端 API 地址
+        let isLoggedIn = false;
+        const apiUrl = 'http://localhost:3000';
 
-        // 顯示彈出視窗
+        function toggleDropdown() {
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+        }
+
         function showPopup() {
-            document.getElementById('loginOverlay').style.display = 'flex';
+            const loginOverlay = document.getElementById('loginOverlay');
+            loginOverlay.style.display = 'flex';
         }
 
-        // 關閉彈出視窗
         function closePopup() {
-            document.getElementById('loginOverlay').style.display = 'none';
+            const loginOverlay = document.getElementById('loginOverlay');
+            loginOverlay.style.display = 'none';
         }
 
-        // 發佈貼文
         async function addPost() {
             if (!isLoggedIn) {
                 showPopup();
@@ -226,7 +252,7 @@
 
                 if (response.ok) {
                     document.getElementById('newPostContent').value = '';
-                    await renderPosts();
+                    renderPosts();
                 } else {
                     alert('發佈失敗');
                 }
@@ -235,7 +261,6 @@
             }
         }
 
-        // 渲染貼文
         async function renderPosts() {
             try {
                 const response = await fetch(`${apiUrl}/posts`);
@@ -268,30 +293,7 @@
             }
         }
 
-        // 初始化
         document.addEventListener('DOMContentLoaded', renderPosts);
-
-
-        // 顯示登入詢問視窗
-        function showPopup() {
-            const loginOverlay = document.getElementById('loginOverlay');
-            loginOverlay.style.display = 'flex';
-        }
-
-        // 關閉登入詢問視窗
-        function closePopup() {
-            const loginOverlay = document.getElementById('loginOverlay');
-            loginOverlay.style.display = 'none';
-        }
-
-        // 點擊頁面其他地方關閉下拉選單
-        window.addEventListener('click', function (e) {
-            const userMenu = document.querySelector('.user-menu');
-            const dropdownMenu = document.getElementById('dropdownMenu');
-            if (!userMenu.contains(e.target)) {
-                dropdownMenu.style.display = 'none';
-            }
-        });
     </script>
 </body>
 </html>
