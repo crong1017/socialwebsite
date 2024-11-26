@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../data/db');
+const db = require('../data/db'); // 引入數據庫連接
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-// 環境變數檢查
+// 確保 JWT_SECRET 環境變數存在
 if (!process.env.JWT_SECRET) {
   console.error('Missing JWT_SECRET environment variable!');
   process.exit(1);
@@ -13,19 +13,22 @@ if (!process.env.JWT_SECRET) {
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-// 註冊
+// 註冊功能
 router.post('/register', async (req, res) => {
   const { username, email, password } = req.body;
 
+  // 請求有效性檢查
   if (!username || !email || !password) {
     return res.status(400).json({ message: 'Username, email, and password are required' });
   }
 
-  if (password.length > 72) {
-    return res.status(400).json({ message: 'Password is too long' });
+  // 密碼長度檢查
+  if (password.length < 6 || password.length > 72) {
+    return res.status(400).json({ message: 'Password must be between 6 and 72 characters long' });
   }
 
   try {
+    // 檢查用戶名或郵箱是否已存在
     const [existingUsers] = await db.promise().execute(
       'SELECT * FROM users WHERE username = ? OR email = ?',
       [username, email]
@@ -35,8 +38,10 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ message: 'Username or email already exists' });
     }
 
+    // 密碼加密
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // 插入用戶數據
     await db.promise().execute(
       'INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
       [username, email, hashedPassword]
@@ -49,26 +54,32 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// 登入
+// 登入功能
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
+  // 請求有效性檢查
   if (!email || !password) {
     return res.status(400).json({ message: 'Email and password are required' });
   }
 
   try {
+    // 查詢用戶
     const [users] = await db.promise().execute('SELECT * FROM users WHERE email = ?', [email]);
+
     if (users.length === 0) {
-      return res.status(400).json({ message: 'User not found' });
+      return res.status(400).json({ message: 'Invalid email or password' });
     }
 
     const user = users[0];
+
+    // 驗證密碼
     const isPasswordMatch = await bcrypt.compare(password, user.password);
     if (!isPasswordMatch) {
-      return res.status(400).json({ message: 'Invalid password' });
+      return res.status(400).json({ message: 'Invalid email or password' });
     }
 
+    // 簽發 JWT
     const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, { expiresIn: '1h' });
 
     res.status(200).json({ message: 'Login successful', token });
@@ -78,7 +89,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// 簡單登出
+// 簡單登出功能
 router.post('/logout', (req, res) => {
   res.status(200).json({ message: 'Logout successful' });
 });
