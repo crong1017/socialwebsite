@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require('../data/db');
+const db = require('../data/db');
 
 // 使用環境變數設定 JWT 密鑰
 const JWT_SECRET = process.env.JWT_SECRET || 'ac3893af177f54168484d5fb0372600e2c5f8b8292f022f4e280502e7e8297c29c8dfc833fa4778e49c632faac91c83de8a70bc3a4679365df68474dbf8e379a';
@@ -19,17 +19,16 @@ exports.register = async (req, res) => {
         }
 
         // 檢查是否已存在
-        const existingUser = await User.findOne({ username });
-        if (existingUser) {
+        const [existingUser] = await db.query('SELECT * FROM users WHERE username = ?', [username]);
+        if (existingUser.length > 0) {
             return res.status(400).json({ message: '使用者名稱已存在' });
         }
 
         // 密碼加密
         const hashedPassword = await bcrypt.hash(password, 10);
+        // 将用户信息插入数据库
+        await db.query('INSERT INTO users (username, password) VALUES (?, ?)', [username, hashedPassword]);
 
-        // 創建新用戶
-        const user = new User({ username, password: hashedPassword });
-        await user.save();
 
         res.status(201).json({ message: '使用者註冊成功' });
     } catch (error) {
@@ -48,11 +47,12 @@ exports.login = async (req, res) => {
             return res.status(400).json({ message: '使用者名稱和密碼為必填' });
         }
 
-        const user = await User.findOne({ username });
-        if (!user) {
+         // 查询数据库中是否存在用户
+        const [users] = await db.query('SELECT * FROM users WHERE username = ?', [username]);
+        if (users.length === 0) {
             return res.status(400).json({ message: '無效的使用者名稱或密碼' });
         }
-
+        const user = users[0];
         // 驗證密碼
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
@@ -68,8 +68,6 @@ exports.login = async (req, res) => {
         res.status(500).json({ message: '伺服器錯誤，請稍後再試' });
     }
 };
-
-// 驗證中間層
 exports.isAuthenticated = (req, res, next) => {
     try {
         const authHeader = req.header('Authorization');
@@ -85,6 +83,7 @@ exports.isAuthenticated = (req, res, next) => {
         res.status(401).json({ message: '無效的授權令牌' });
     }
 };
+
 
 // 登出
 exports.logout = (req, res) => {
