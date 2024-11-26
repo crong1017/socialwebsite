@@ -6,8 +6,8 @@ import java.net.InetSocketAddress;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        // 創建一個 HTTP 伺服器，監聽 8080 埠號
-        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+        // 創建一個 HTTP 伺服器，監聽 3000 埠號
+        HttpServer server = HttpServer.create(new InetSocketAddress(3000), 0);
 
         // 設置根路徑的處理器，回應 "Server is running"
         server.createContext("/", exchange -> {
@@ -36,6 +36,6 @@ public class Main {
         // 啟動伺服器
         server.setExecutor(null); // 預設的 executor
         server.start();
-        System.out.println("Server is running on port 8080");
+        System.out.println("Server is running on port 3000");
     }
 }
