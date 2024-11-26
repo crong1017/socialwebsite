@@ -5,12 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>註冊 - 泡泡糖社交</title>
     <link rel="stylesheet" href="Client/css/styles.css">
-    <style>
-        .error-message {
-            color: red;
-            margin-top: 10px;
-        }
-    </style>
 </head>
 <body>
     <!-- 頁首 -->
@@ -26,7 +20,7 @@
         <input id="register-confirm-password" type="password" placeholder="確認密碼" required>
         <button id="register-button" onclick="register()">註冊</button>
         <p>已有帳號？ <a href="login.html">登入</a></p>
-        <p id="error-message" class="error-message"></p>
+        <p id="error-message" class="error-message" style="color: red;"></p>
     </div>
 
     <script>
@@ -44,6 +38,7 @@
             // 禁用按鈕避免重複提交
             registerButton.disabled = true;
 
+            // 檢查輸入欄位
             if (!email || !password || !confirmPassword) {
                 errorMessage.textContent = '請填寫所有欄位';
                 registerButton.disabled = false;
@@ -63,7 +58,8 @@
             }
 
             try {
-                const response = await fetch('/api/register', { // 確認 API 路徑正確
+                // 確保 API 路徑正確 (依後端設計)
+                const response = await fetch('/api/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
@@ -87,3 +83,4 @@
     </script>
 </body>
 </html>
+
