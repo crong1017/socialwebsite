@@ -10,11 +10,11 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4; /* 淺藍色背景 */
+            background-color: #f4f4f4;
         }
 
         .header {
-            background-color: #6c8ba4; /* 主題藍色 */
+            background-color: #6c8ba4; /* 主題淺藍色 */
             color: white;
             padding: 15px 20px;
             display: flex;
@@ -78,7 +78,7 @@
             flex: 1;
             background: white;
             padding: 15px;
-            border-radius: 8px;
+            border-radius: 5px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
@@ -86,23 +86,21 @@
             background: white;
             padding: 15px;
             margin-bottom: 15px;
-            border-radius: 8px;
+            border-radius: 5px;
             border: 1px solid #ddd;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .interaction-buttons button {
             margin-right: 10px;
-            background-color: #4a90e2;
-            color: white;
+            background-color: #eeeeee;
             border: none;
             padding: 8px 15px;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 4px;
         }
 
         .interaction-buttons button:hover {
-            background-color: #357abf;
+            background-color: #cccccc;
         }
 
         .side-content h3 {
@@ -159,12 +157,12 @@
         }
 
         .login-popup .register {
-            background-color: #5b9bd5;
+            background-color: #5b9bd5; /* 註冊按鈕淺藍色 */
             color: white;
         }
 
         .login-popup .login {
-            background-color: #357abf;
+            background-color: #2d82c7; /* 登入按鈕深藍色 */
             color: white;
         }
     </style>
@@ -187,14 +185,24 @@
     <div class="container">
         <!-- 貼文區 -->
         <main class="main-content" id="feedContainer">
-            <!-- 動態貼文 -->
+            <div class="post-card">
+                <h3>這是第一篇貼文！</h3>
+                <p>2024-11-22</p>
+                <div class="interaction-buttons">
+                    <button onclick="checkLogin('like')">👍 按讚</button>
+                    <button onclick="checkLogin('comment')">💬 留言</button>
+                </div>
+            </div>
         </main>
 
         <!-- 右側欄位 -->
         <aside class="side-content">
             <h3>其他文章</h3>
-            <ul id="otherPosts">
-                <!-- 動態更新的其他文章 -->
+            <ul>
+                <li><a href="#">文章 1</a></li>
+                <li><a href="#">文章 2</a></li>
+                <li><a href="#">文章 3</a></li>
+                <li><a href="#">文章 4</a></li>
             </ul>
         </aside>
     </div>
@@ -209,46 +217,15 @@
     </div>
 
     <script>
-        const apiUrl = 'http://localhost:3000'; // 假設的 API 地址
+        let isLoggedIn = false;
 
-        // 動態渲染貼文
-        async function renderPosts() {
-            try {
-                const response = await fetch(`${apiUrl}/posts`);
-                const posts = await response.json();
-
-                const feedContainer = document.querySelector('#feedContainer');
-                const otherPosts = document.querySelector('#otherPosts');
-                feedContainer.innerHTML = '';
-                otherPosts.innerHTML = '';
-
-                posts.forEach((post, index) => {
-                    // 渲染主區域貼文
-                    if (index < 5) {
-                        const postCard = `
-                            <div class="post-card">
-                                <h3>${post.title}</h3>
-                                <p>${post.content}</p>
-                                <div class="interaction-buttons">
-                                    <button onclick="checkLogin('like')">👍 按讚</button>
-                                    <button onclick="checkLogin('comment')">💬 留言</button>
-                                </div>
-                            </div>`;
-                        feedContainer.innerHTML += postCard;
-                    }
-
-                    // 渲染其他文章
-                    if (index < 5) {
-                        const otherPostItem = `<li><a href="#">${post.title}</a></li>`;
-                        otherPosts.innerHTML += otherPostItem;
-                    }
-                });
-            } catch (error) {
-                console.error('載入貼文失敗:', error);
-            }
+        // 切換右上角下拉選單
+        function toggleDropdown() {
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
         }
 
-        // 登入檢查
+        // 點擊按讚或留言檢查登入狀態
         function checkLogin(action) {
             if (!isLoggedIn) {
                 showPopup();
@@ -257,9 +234,25 @@
             }
         }
 
-        // 頁面載入完成後渲染
-        document.addEventListener('DOMContentLoaded', () => {
-            renderPosts();
+        // 顯示登入詢問視窗
+        function showPopup() {
+            const loginOverlay = document.getElementById('loginOverlay');
+            loginOverlay.style.display = 'flex';
+        }
+
+        // 關閉登入詢問視窗
+        function closePopup() {
+            const loginOverlay = document.getElementById('loginOverlay');
+            loginOverlay.style.display = 'none';
+        }
+
+        // 點擊頁面其他地方關閉下拉選單
+        window.addEventListener('click', function (e) {
+            const userMenu = document.querySelector('.user-menu');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            if (!userMenu.contains(e.target)) {
+                dropdownMenu.style.display = 'none';
+            }
         });
     </script>
 </body>
