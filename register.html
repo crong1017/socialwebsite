@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>註冊 - 泡泡糖社交</title>
     <link rel="stylesheet" href="Client/css/styles.css">
+    <style>
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
     <!-- 頁首 -->
@@ -18,8 +24,9 @@
         <input id="register-email" type="email" placeholder="Email" required>
         <input id="register-password" type="password" placeholder="Password" required>
         <input id="register-confirm-password" type="password" placeholder="確認密碼" required>
-        <button onclick="register()">註冊</button>
+        <button id="register-button" onclick="register()">註冊</button>
         <p>已有帳號？ <a href="login.html">登入</a></p>
+        <p id="error-message" class="error-message"></p>
     </div>
 
     <script>
@@ -28,37 +35,54 @@
             const email = document.getElementById('register-email').value.trim();
             const password = document.getElementById('register-password').value.trim();
             const confirmPassword = document.getElementById('register-confirm-password').value.trim();
+            const registerButton = document.getElementById('register-button');
+            const errorMessage = document.getElementById('error-message');
+
+            // 清空錯誤訊息
+            errorMessage.textContent = '';
+
+            // 禁用按鈕避免重複提交
+            registerButton.disabled = true;
 
             if (!email || !password || !confirmPassword) {
-                alert('請填寫所有欄位');
+                errorMessage.textContent = '請填寫所有欄位';
+                registerButton.disabled = false;
+                return;
+            }
+
+            if (!/\S+@\S+\.\S+/.test(email)) {
+                errorMessage.textContent = '請輸入有效的電子郵件地址';
+                registerButton.disabled = false;
                 return;
             }
 
             if (password !== confirmPassword) {
-                alert('密碼不一致，請重新輸入');
+                errorMessage.textContent = '密碼不一致，請重新輸入';
+                registerButton.disabled = false;
                 return;
             }
 
             try {
-                // 假設伺服器的 API 是 /api/register
-                const response = await fetch('/register', {
+                const response = await fetch('/api/register', { // 確認 API 路徑正確
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
                 });
 
                 const result = await response.json();
-                if (result.success) {
+
+                if (response.ok) {
                     alert('註冊成功！請登入');
                     window.location.href = "login.html"; // 跳轉到登入頁
                 } else {
-                    alert(result.message || '註冊失敗，請稍後再試');
+                    errorMessage.textContent = result.message || '註冊失敗，請稍後再試';
                 }
             } catch (error) {
                 console.error('註冊錯誤：', error);
-                alert('伺服器發生錯誤，請稍後再試');
-            }finally {
+                errorMessage.textContent = '伺服器發生錯誤，請稍後再試';
+            } finally {
                 registerButton.disabled = false;
+            }
         }
     </script>
 </body>
