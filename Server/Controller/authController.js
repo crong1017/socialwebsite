@@ -60,7 +60,7 @@ exports.login = async (req, res) => {
         }
 
         // 簽發 JWT
-        const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
 
         res.json({ message: '登入成功', token });
     } catch (error) {
