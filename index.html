@@ -221,17 +221,17 @@
 
         function showPopup() {
             const loginOverlay = document.getElementById('loginOverlay');
-            loginOverlay.style.display = 'flex';
+            loginOverlay.style.display = 'flex';// 顯示彈窗
         }
 
         function closePopup() {
             const loginOverlay = document.getElementById('loginOverlay');
-            loginOverlay.style.display = 'none';
+            loginOverlay.style.display = 'none';// 關閉彈窗
         }
 
         async function addPost() {
             if (!isLoggedIn) {
-                showPopup();
+                showPopup(); //顯示未登入提示
                 return;
             }
 
@@ -242,7 +242,7 @@
             }
 
             const post = { content, date: new Date().toISOString() };
-
+            // 發送貼文到伺服器
             try {
                 const response = await fetch(`${apiUrl}/posts`, {
                     method: 'POST',
@@ -252,7 +252,7 @@
 
                 if (response.ok) {
                     document.getElementById('newPostContent').value = '';
-                    renderPosts();
+                    renderPosts();// 重新渲染貼文
                 } else {
                     alert('發佈失敗');
                 }
