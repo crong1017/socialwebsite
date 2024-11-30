@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>泡泡糖社交 - 個人主頁</title>
-    <link rel="stylesheet" href="Client/css/styles.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,7 +13,7 @@
         }
 
         .header {
-            background-color: #6c8ba4; /* 主題藍色 */
+            background-color: #6c8ba4;
             color: white;
             padding: 15px 20px;
             display: flex;
@@ -40,27 +39,51 @@
             color: #333;
         }
 
-        .dropdown-menu {
-            position: absolute;
-            top: 60px;
-            right: 20px;
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            display: none;
+       .dropdown-menu {
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        display: none;
+        width: 180px; /* 增大寬度 */
+        padding: 5px; /* 增加內部間距，防止按鈕擠壓 */
+        box-sizing: border-box; /* 確保內邊距計入寬度內 */
         }
 
-        .dropdown-menu a {
-            display: block;
-            padding: 10px 20px;
-            text-decoration: none;
-            color: #333;
-        }
-
+       .dropdown-menu a {
+    display: block;
+    padding: 12px; /* 調整為更緊湊的填充 */
+    text-decoration: none;
+    color: #333;
+    width: 100%; /* 確保填滿父元素寬度 */
+    text-align: center;
+    box-sizing: border-box;
+}
+       
         .dropdown-menu a:hover {
             background-color: #f0f0f0;
         }
+
+        .dropdown-menu button {
+            display: block;
+            width: calc(100% - 20px); /* 減去左右邊框，讓按鈕居中 */
+            padding: 10px;
+            background-color: #E2B3A3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 10px auto; /* 上下和左右居中 */
+        }
+ .dropdown-menu button:hover {
+        background-color: #D18063;
+    }
 
         .container {
             display: flex;
@@ -83,48 +106,12 @@
             color: #333;
         }
 
-        .profile-section textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        .profile-section button {
-            background-color: #6c8ba4; /* 按鈕主題色 */
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .profile-section button:hover {
-            background-color: #5a728a; /* 按鈕 hover 顏色 */
-        }
-
         .post-form {
             background: white;
             padding: 15px;
             margin-bottom: 15px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .post-form textarea, .post-form button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        .post-form button {
-            background-color: #6c8ba4; /* 按鈕主題色 */
-            color: white;
-            cursor: pointer;
         }
 
         .post-card {
@@ -135,138 +122,297 @@
             border: 1px solid #ddd;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+
+        .post-form button {
+        display: inline-block;
+        background-color: #85c9ad;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 10px 20px;
+        font-size: 14px;
+        cursor: pointer;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+
+    .post-form button:hover {
+        background-color: #679e87;
+    }
+    
+    .username-text {
+    color: #003D79; /* 藍色 */
+    font-weight: bold; /* 加粗 */
+}
+
+.post-card button {
+    background-color: #CB8A90; /* 紅色背景 */
+    color: white; /* 按鈕文字顏色 */
+    border: none; /* 無邊框 */
+    border-radius: 4px; /* 圓角 */
+    padding: 8px 16px; /* 內邊距 */
+    font-size: 14px; /* 字體大小 */
+    cursor: pointer; /* 滑鼠移上顯示為手型 */
+    transition: background-color 0.3s ease; /* 背景色的平滑過渡效果 */
+    margin-top: 10px; /* 與上方內容的間距 */
+}
+
+.post-card button:hover {
+    background-color: #B97687; /* 滑鼠懸停時的背景顏色 */
+    transform: scale(1.05); /* 放大效果 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 懸停時的陰影效果 */
+}
+
+.like-button {
+    background: none;
+    border: none;
+    color: #555;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 10px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.like-button.liked {
+    color: #007bff;
+    font-weight: bold;
+}
+
     </style>
 </head>
 <body>
-    <!-- 頁首 -->
-    <header class="header">
-        <h1>泡泡糖社交 - 個人主頁</h1>
-        <div class="user-menu">
-            <div class="user-icon" onclick="toggleDropdown()">👤</div>
-            <div class="dropdown-menu" id="dropdownMenu">
-                <a href="index.html">首頁</a>
-                <a href="home.html">個人主頁</a>
-                <a href="login.html">登入</a>
-                <a href="register.html">註冊</a>
-            </div>
-        </div>
-    </header>
-
-    <!-- 主內容 -->
-    <div class="container">
-        <!-- 個人檔案 -->
-        <section class="profile-section" id="profileSection">
-            <h2>個人檔案</h2>
-            <p>載入中...</p>
-        </section>
-
-        <!-- 發文區 -->
-        <div class="post-form">
-            <h3>新增貼文</h3>
-            <textarea id="newPostContent" rows="3" placeholder="寫點什麼..."></textarea>
-            <button onclick="addPost()">發佈</button>
-        </div>
-
-        <!-- 貼文列表 -->
-        <div id="feedContainer">
-            <!-- 動態生成貼文 -->
+<header class="header">
+    <h1>泡泡糖社交 - 個人主頁</h1>
+    <div class="user-menu">
+        <div class="user-icon" onclick="toggleDropdown()">👤</div>
+        <div class="dropdown-menu" id="dropdownMenu">
+            <a href="index.html">首頁</a>
+            <a href="login.html">登入</a>
+            <a href="register.html">註冊</a>
         </div>
     </div>
+</header>
+<div class="container">
+    <section id="profile-section">
+        <h2>個人檔案</h2>
+        <p id="usernameDisplay">載入中...</p>
+    </section>
+    <div class="post-form">
+        <h3>新增貼文</h3>
+        <textarea id="newPostContent" rows="3" placeholder="寫點什麼..."></textarea>
+        <button onclick="addPost()">發佈</button>
+    </div>
+    <div id="feed-container"></div>
+</div>
+<div id="userMenu">
+    <!-- 這裡的內容會根據登入狀態動態更新 -->
+</div>
 
-    <script>
-        const apiUrl = 'http://localhost:3000'; // 假設後端 API 地址
-        const userId = 1; // 假設當前登入用戶 ID
-
-        // 動態渲染個人檔案
-        async function renderProfile() {
-            try {
-                const response = await fetch(`${apiUrl}/users/${userId}`);
-                const user = await response.json();
-
-                const profileSection = document.getElementById('profileSection');
-                profileSection.innerHTML = `
-                    <h2>個人檔案</h2>
-                    <p>使用者名稱：<strong>${user.username}</strong></p>
-                    <textarea id="bioInput">${user.bio}</textarea>
-                    <button onclick="updateProfile()">更新個人介紹</button>
-                `;
-
-                // 同時渲染個人貼文
-                renderPosts(user.posts);
-            } catch (error) {
-                console.error('無法載入個人檔案:', error);
-            }
+<script>
+    const apiUrl = 'https://morning-mesa-61932-572b3fa52a2d.herokuapp.com';
+    let currentUserId;
+  
+    // 切換下拉選單
+    function toggleDropdown() {
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+    }
+    
+    // 發佈貼文
+    async function addPost() {
+        const content = document.getElementById('newPostContent').value.trim();
+        if (!content) {
+            alert('請輸入內容');
+            return;
         }
 
-        // 更新個人介紹
-        async function updateProfile() {
-            const bio = document.getElementById('bioInput').value;
+        try {
+            const response = await fetch(`${apiUrl}/posts`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content, userId: 1, date: new Date().toISOString() })
+            });
 
-            try {
-                const response = await fetch(`${apiUrl}/users/${userId}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ bio })
-                });
-
-                if (response.ok) {
-                    alert('個人介紹已更新！');
-                    renderProfile(); // 重新渲染檔案
-                } else {
-                    alert('更新失敗');
-                }
-            } catch (error) {
-                console.error('更新個人檔案失敗:', error);
+            if (response.ok) {
+                document.getElementById('newPostContent').value = '';
+                renderPosts();
+            } else {
+                alert('發佈貼文失敗');
             }
+        } catch (error) {
+            console.error('發佈貼文錯誤:', error);
         }
+    }
 
-        // 動態渲染貼文
-        function renderPosts(posts) {
-            const feedContainer = document.getElementById('feedContainer');
+ // 渲染使用者自己的貼文
+    async function renderPosts() {
+        try {
+            const response = await fetch(`${apiUrl}/posts/user`, { credentials: 'include' });
+            if (!response.ok) throw new Error('無法載入使用者貼文');
+
+            const posts = await response.json();
+            const feedContainer = document.getElementById('feed-container');
             feedContainer.innerHTML = '';
 
-            posts.forEach(post => {
-                const postCard = `
-                    <div class="post-card">
-                        <p>${post.content}</p>
-                        <small>${new Date(post.date).toLocaleString()}</small>
-                    </div>`;
-                feedContainer.innerHTML += postCard;
-            });
-        }
+            if (posts.length === 0) {
+                feedContainer.innerHTML = '<p>目前沒有貼文。</p>';
+            } else {
+                posts.forEach(post => {
 
-        // 發佈新貼文
-        async function addPost() {
-            const content = document.querySelector('#newPostContent').value;
-            if (!content) {
-                alert('請輸入貼文內容');
-                return;
-            }
-
-            try {
-                const response = await fetch(`${apiUrl}/posts`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userId, content, date: new Date().toISOString() })
+                   const likesCount = post.likes_count || 0; 
+                    feedContainer.innerHTML += `
+                        <div class="post-card">
+                            <p>${post.content}</p>
+                            <small>作者：${post.username} | ${new Date(post.created_at).toLocaleString()}</small>
+                            <button onclick="deletePost(${post.id})">刪除</button>
+                            <span id="like-count-${post.id}">按讚數: ${likesCount}</span>
+            </div>
+                    `;
                 });
-
-                if (response.ok) {
-                    document.querySelector('#newPostContent').value = '';
-                    renderProfile(); // 重新渲染個人資料和貼文
-                } else {
-                    alert('發佈貼文失敗');
-                }
-            } catch (error) {
-                console.error('發佈貼文時出現錯誤:', error);
             }
+        } catch (error) {
+            console.error('載入使用者貼文失敗:', error);
+            const feedContainer = document.getElementById('feed-container');
+            feedContainer.innerHTML = '<p>載入貼文失敗，請稍後再試。</p>';
         }
+    }
 
-        // 初始化
-        document.addEventListener('DOMContentLoaded', () => {
-            renderProfile();
+    // 刪除貼文
+    async function deletePost(postId) {
+        if (!confirm('確定要刪除此貼文嗎？')) return;
+
+        try {
+            const response = await fetch(`${apiUrl}/posts/${postId}`, {
+                method: 'DELETE',
+                credentials: 'include',
+            });
+
+            if (response.ok) {
+                alert('貼文已成功刪除');
+                renderPosts(); // 重新渲染貼文列表
+            } else {
+                const error = await response.json();
+                alert(`刪除貼文失敗：${error.message}`);
+            }
+        } catch (error) {
+            console.error('刪除貼文失敗:', error);
+        }
+    }
+
+
+// 更新所有貼文的按讚數
+async function fetchLikeCount(postId) {
+    try {
+        const response = await fetch(`${apiUrl}/posts/${postId}/likes`);
+        if (!response.ok) throw new Error('無法獲取按讚數');
+
+        const { likes_count } = await response.json();
+        const likeCountElement = document.getElementById(`like-count-${postId}`);
+        if (likeCountElement) {
+            likeCountElement.textContent = `按讚數: ${likes_count}`;
+        }
+    } catch (error) {
+        console.error('同步按讚數失敗:', error);
+    }
+}
+
+async function toggleLike(postId) {
+    try {
+        const response = await fetch(`${apiUrl}/posts/${postId}/like`, {
+            method: 'POST', // 或 'DELETE' 取消按讚
+            credentials: 'include',
         });
-    </script>
+
+        if (response.ok) {
+            await fetchLikeCount(postId); // 更新按讚數
+        } else {
+            const error = await response.json();
+            alert(`操作失敗：${error.message}`);
+        }
+    } catch (error) {
+        console.error('按讚失敗:', error);
+    }
+}
+
+async function fetchLikeCount(postId) {
+    try {
+        const response = await fetch(`${apiUrl}/posts/${postId}/likes`);
+        if (!response.ok) throw new Error('無法獲取按讚數');
+
+        const { likes_count } = await response.json();
+        const likeCountElement = document.getElementById(`like-count-${postId}`);
+        if (likeCountElement) {
+            likeCountElement.textContent = `按讚數: ${likes_count}`;
+        }
+    } catch (error) {
+        console.error('同步按讚數失敗:', error);
+    }
+}
+
+    // 檢查登入狀態
+    async function checkLoginStatus() {
+        try {
+            const response = await fetch(`${apiUrl}/api/auth`);
+            if (!response.ok) {
+                throw new Error('伺服器回應失敗');
+            }
+
+            const data = await response.json();
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            const usernameDisplay = document.getElementById('usernameDisplay');
+
+            if (data.isLoggedIn) {
+                currentUserId = data.userId; // 設置當前使用者ID
+                if (dropdownMenu) {
+                    dropdownMenu.innerHTML = `
+                    <p class="username-text">歡迎，${data.username}</p>
+                        <a href="index.html">首頁</a>
+                        <button onclick="logout()">登出</button>
+                    `;
+                }
+                if (usernameDisplay) {
+                    usernameDisplay.textContent = `使用者名稱：${data.username}`;
+                }
+            } else {
+                if (dropdownMenu) {
+                    currentUserId = null; // 未登入時重置
+                    dropdownMenu.innerHTML = `
+                        <a href="index.html">首頁</a>
+                        <a href="login.html">登入</a>
+                        <a href="register.html">註冊</a>
+                    `;
+                }
+                if (usernameDisplay) {
+                    usernameDisplay.textContent = '未登入';
+                }
+            }
+        } catch (error) {
+            console.error('檢查登入狀態失敗:', error);
+        }
+    }
+
+    // 登出功能
+    async function logout() {
+        try {
+            const response = await fetch(`${apiUrl}/api/logout`, { method: 'POST' });
+            if (response.ok) {
+                alert('登出成功！');
+                window.location.href = 'index.html';
+            } else {
+                alert('登出失敗');
+            }
+        } catch (error) {
+            console.error('登出錯誤:', error);
+        }
+    }
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+        checkLoginStatus();
+        renderPosts();
+    });
+</script>
 </body>
 </html>
-
 

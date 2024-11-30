@@ -4,7 +4,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>註冊 - 泡泡糖社交</title>
-    <link rel="stylesheet" href="Client/css/styles.css">
+
+  <style>
+        /* 從 styles.css 內嵌的相關樣式 */
+        body {
+            background-color: #f3f5f7;
+            color: #4a4e50;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: #87a9b5;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid #c3d6e3;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .auth-container {
+            margin: auto;
+            width: 90%;
+            max-width: 400px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .auth-container h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .auth-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .auth-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #87a9b5;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .auth-container button:hover {
+            background-color: #6b8f9a;
+        }
+
+        .auth-container a {
+            color: #87a9b5;
+            text-decoration: none;
+        }
+
+        .auth-container a:hover {
+            text-decoration: underline;
+        }
+    </style>
+
 </head>
 <body>
     <!-- 頁首 -->
@@ -15,6 +95,7 @@
     <!-- 註冊表單 -->
     <div class="auth-container">
         <h2>註冊</h2>
+        <input id="register-username" type="text" placeholder="Username" required>
         <input id="register-email" type="email" placeholder="Email" required>
         <input id="register-password" type="password" placeholder="Password" required>
         <input id="register-confirm-password" type="password" placeholder="確認密碼" required>
@@ -26,6 +107,7 @@
     <script>
         // 註冊邏輯
         async function register() {
+            const username = document.getElementById('register-username').value.trim();
             const email = document.getElementById('register-email').value.trim();
             const password = document.getElementById('register-password').value.trim();
             const confirmPassword = document.getElementById('register-confirm-password').value.trim();
@@ -38,8 +120,8 @@
             // 禁用按鈕避免重複提交
             registerButton.disabled = true;
 
-            // 檢查輸入欄位
-            if (!email || !password || !confirmPassword) {
+            // 驗證輸入
+            if (!username || !email || !password || !confirmPassword) {
                 errorMessage.textContent = '請填寫所有欄位';
                 registerButton.disabled = false;
                 return;
@@ -58,11 +140,11 @@
             }
 
             try {
-                // 確保 API 路徑正確 (依後端設計)
+                // 發送 API 請求
                 const response = await fetch('/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
+                    body: JSON.stringify({ username, email, password })
                 });
 
                 const result = await response.json();

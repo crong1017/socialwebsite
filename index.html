@@ -39,26 +39,51 @@
             color: #333;
         }
 
-        .dropdown-menu {
+.dropdown-menu {
             position: absolute;
-            top: 50px;
-            right: 0;
+            top: 60px;
+            right: 20px;
             background-color: white;
             border: 1px solid #ddd;
             border-radius: 4px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             display: none;
+            width: 180px; /* 增大寬度 */
+            padding: 5px; /* 增加內部間距，防止按鈕擠壓 */
+            box-sizing: border-box; /* 確保內邊距計入寬度內 */
         }
 
         .dropdown-menu a {
             display: block;
-            padding: 10px 20px;
+            padding: 12px; /* 調整為更緊湊的填充 */
             text-decoration: none;
             color: #333;
+            width: 100%; /* 確保填滿父元素寬度 */
+            text-align: center;
+            box-sizing: border-box;
         }
 
         .dropdown-menu a:hover {
             background-color: #f0f0f0;
+        }
+
+        .dropdown-menu button {
+            display: block;
+            width: calc(100% - 20px); /* 減去左右邊框，讓按鈕居中 */
+            padding: 10px;
+            background-color: #E2B3A3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 10px auto; /* 上下和左右居中 */
+        }
+
+        .dropdown-menu button:hover {
+            background-color: #D18063;
         }
 
         .container {
@@ -165,6 +190,23 @@
             background-color: #5b9bd5;
             color: white;
         }
+
+        .like-button {
+    background: none;
+    border: none;
+    color: #555;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 10px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.like-button.liked {
+    color: #007bff;
+    font-weight: bold;
+}
+
     </style>
 </head>
 <body>
@@ -191,7 +233,7 @@
             </div>
 
             <!-- 動態貼文 -->
-            <div id="feedContainer"></div>
+            <div id="feed-container"></div>
         </main>
 
         <!-- 右側欄位 -->
@@ -210,90 +252,191 @@
         </div>
     </div>
 
-    <script>
-        let isLoggedIn = false;
-        const apiUrl = 'http://localhost:3000';
+   <div id="userMenu">
+    <!-- 這裡的內容會根據登入狀態動態更新 -->
+</div>
 
-        function toggleDropdown() {
-            const dropdownMenu = document.getElementById('dropdownMenu');
-            dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+<script>
+    const apiUrl = 'https://morning-mesa-61932-572b3fa52a2d.herokuapp.com';
+    let currentUserId ;
+
+    // 切換下拉選單
+    function toggleDropdown() {
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // 發佈貼文
+    async function addPost() {
+        const content = document.getElementById('newPostContent').value.trim();
+        if (!content) {
+            alert('請輸入內容');
+            return;
         }
 
-        function showPopup() {
-            const loginOverlay = document.getElementById('loginOverlay');
-            loginOverlay.style.display = 'flex';// 顯示彈窗
-        }
+        try {
+            const response = await fetch(`${apiUrl}/posts`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content, userId: currentUserId })
+            });
 
-        function closePopup() {
-            const loginOverlay = document.getElementById('loginOverlay');
-            loginOverlay.style.display = 'none';// 關閉彈窗
-        }
-
-        async function addPost() {
-            if (!isLoggedIn) {
-                showPopup(); //顯示未登入提示
-                return;
+            if (response.ok) {
+                document.getElementById('newPostContent').value = '';
+                await renderPosts(); // 更新貼文列表
+            } else {
+                alert('發佈貼文失敗');
             }
-
-            const content = document.getElementById('newPostContent').value;
-            if (!content.trim()) {
-                alert('請輸入內容');
-                return;
-            }
-
-            const post = { content, date: new Date().toISOString() };
-            // 發送貼文到伺服器
-            try {
-                const response = await fetch(`${apiUrl}/posts`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(post)
-                });
-
-                if (response.ok) {
-                    document.getElementById('newPostContent').value = '';
-                    renderPosts();// 重新渲染貼文
-                } else {
-                    alert('發佈失敗');
-                }
-            } catch (error) {
-                console.error('發佈貼文失敗:', error);
-            }
+        } catch (error) {
+            console.error('發佈貼文錯誤:', error);
         }
+    }
 
-        async function renderPosts() {
-            try {
-                const response = await fetch(`${apiUrl}/posts`);
-                const posts = await response.json();
+// 渲染所有貼文
+    async function renderPosts() {
+        try {
+            const response = await fetch(`${apiUrl}/posts`);
+            if (!response.ok) throw new Error('無法載入貼文');
 
-                const feedContainer = document.getElementById('feedContainer');
-                const otherPosts = document.getElementById('otherPosts');
+            const posts = await response.json();
+            const feedContainer = document.getElementById('feed-container'); // 確保容器 ID 正確
+            feedContainer.innerHTML = ''; // 清空貼文內容
 
-                feedContainer.innerHTML = '';
-                otherPosts.innerHTML = '';
+            if (posts.length === 0) {
+                feedContainer.innerHTML = '<p>目前沒有貼文。</p>';
+            } else {
+                posts.forEach(post => {
+            // 僅當貼文的 userId 與 currentUserId 一致時顯示刪除按鈕
+                    const deleteButton =
+                        post.userId === currentUserId
+                            ? `<button onclick="deletePost(${post.id})">刪除</button>`
+                            : '';
 
-                posts.forEach((post, index) => {
                     feedContainer.innerHTML += `
-                        <div class="post-card">
-                            <p>${post.content}</p>
-                            <small>${new Date(post.date).toLocaleString()}</small>
-                            <div class="interaction-buttons">
-                                <button onclick="showPopup()">👍 按讚</button>
-                                <button onclick="showPopup()">💬 留言</button>
-                            </div>
-                        </div>
-                    `;
-
-                    if (index < 4) {
-                        otherPosts.innerHTML += `<li><a href="#">${post.content}</a></li>`;
-                    }
+                    <div class="post-card">
+                        <p>${post.content}</p>
+                        <small>作者：${post.username} | ${new Date(post.created_at).toLocaleString()}</small>
+                         <button class="like-button" onclick="toggleLike(${post.id})">👍</button>
+                        <span id="like-count-${post.id}"></span>
+                    </div>
+                `;
                 });
-            } catch (error) {
-                console.error('載入貼文失敗:', error);
             }
+        } catch (error) {
+            console.error('載入貼文失敗:', error);
+            const feedContainer = document.getElementById('feed-container');
+            feedContainer.innerHTML = '<p>載入貼文失敗，請稍後再試。</p>';
+        }
+    }
+
+    //刪除貼文
+    async function deletePost(postId) {
+        if (!confirm('確定要刪除此貼文嗎？')) {
+            return;
         }
 
-        document.addEventListener('DOMContentLoaded', renderPosts);
-    </script>
+        try {
+            const response = await fetch(`${apiUrl}/posts/${postId}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                alert('貼文已成功刪除');
+                renderPosts(); // 刪除成功後重新渲染貼文列表
+            } else {
+                alert('刪除貼文失敗，請稍後再試');
+            }
+        } catch (error) {
+            console.error('刪除貼文失敗:', error);
+        }
+    }
+
+// 切換按讚狀態
+async function toggleLike(postId) {
+    try {
+        const response = await fetch(`${apiUrl}/posts/${postId}/like`, {
+            method: 'POST',
+            credentials: 'include',
+        });
+
+        if (response.ok) {
+            // 按讚成功或取消按讚後重新同步按讚數
+            await fetchLikeCount(postId);
+        } else {
+            const error = await response.json();
+            alert(`操作失敗：${error.message}`);
+        }
+    } catch (error) {
+        console.error('按讚操作失敗:', error);
+    }
+}
+
+// 獲取並更新按讚數
+async function fetchLikeCount(postId) {
+    try {
+        const response = await fetch(`${apiUrl}/posts/${postId}/likes`);
+        if (!response.ok) throw new Error('無法獲取按讚數');
+
+        const data = await response.json();
+        const likeCountElement = document.querySelector(`#like-count-${postId}`);
+        if (likeCountElement) {
+            likeCountElement.textContent = `按讚數: ${data.likes_count}`;
+        }
+    } catch (error) {
+        console.error('同步按讚數失敗:', error);
+    }
+}
+
+
+    // 檢查登入狀態
+    async function checkLoginStatus() {
+        try {
+            const response = await fetch(`${apiUrl}/api/auth`);
+            if (!response.ok) throw new Error('伺服器回應失敗');
+
+            const data = await response.json();
+            const dropdownMenu = document.getElementById('dropdownMenu');
+
+            if (data.isLoggedIn) {
+                currentUserId = data.userId; // 確保後端返回正確的 userId
+                dropdownMenu.innerHTML = `
+                    歡迎，${data.username}
+                    <a href="home.html">個人主頁</a>
+                    <button onclick="logout()">登出</button>
+                `;
+            } else {
+                currentUserId = null;
+                dropdownMenu.innerHTML = `
+                    <a href="home.html">個人主頁</a>
+                    <a href="login.html">登入</a>
+                    <a href="register.html">註冊</a>
+                `;
+            }
+        } catch (error) {
+            console.error('檢查登入狀態失敗:', error);
+        }
+    }
+
+    // 登出功能
+    async function logout() {
+        try {
+            const response = await fetch(`${apiUrl}/api/logout`, { method: 'POST' });
+            if (response.ok) {
+                alert('登出成功！');
+                window.location.href = 'index.html';
+            } else {
+                alert('登出失敗');
+            }
+        } catch (error) {
+            console.error('登出錯誤:', error);
+        }
+    }
+
+    // 初始化頁面
+    document.addEventListener('DOMContentLoaded', async () => {
+        await checkLoginStatus();
+        await renderPosts();
+    });
+</script>
 </body>
 </html>
