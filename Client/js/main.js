@@ -1,23 +1,7 @@
 const main = {
   init: () => {
-    main.showGuide(); // 初次進入顯示引導
     main.loadPosts(); // 載入貼文
     main.updateUserMenu(); // 更新右上角按鈕狀態
-  },
-
-  // 檢查是否為首次進入並顯示引導
-  showGuide: () => {
-    const isFirstVisit = localStorage.getItem('firstVisit') === null;
-
-    if (isFirstVisit) {
-      const overlay = document.getElementById('overlay');
-      if (overlay) {
-        overlay.style.display = 'flex';
-      }
-      localStorage.setItem('firstVisit', 'no');
-    } else {
-      main.showMainScreen();
-    }
   },
 
   // 顯示主畫面
@@ -128,14 +112,6 @@ const main = {
   },
 };
 
-// 關閉引導畫面
-function closeGuide() {
-  const overlay = document.getElementById('overlay');
-  if (overlay) {
-    overlay.style.display = 'none';
-  }
-  main.showMainScreen();
-}
 
 // 初始化主程式
 main.init();
